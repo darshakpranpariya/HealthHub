@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "503209379869",
+    "firebase_url": "https://healthhub-4f10c.firebaseio.com",
+    "project_id": "healthhub-4f10c",
+    "storage_bucket": "healthhub-4f10c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:503209379869:android:d97e55b7182953cfbe5ef4",
+        "android_client_info": {
+          "package_name": "com.example.healthhub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "503209379869-4qgu7u1r9nf8g75ofoj320jqvb147jnt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcJpTuYrHGwPNFx7R61NZnV2jNEGi9rog"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "503209379869-4qgu7u1r9nf8g75ofoj320jqvb147jnt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
