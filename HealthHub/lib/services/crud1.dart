@@ -14,15 +14,9 @@ class CRUD1{
   Future<void> addData(signupdata,BuildContext context) async{
     if(checksignin()){
       
-        Firestore.instance.collection('patient').add(signupdata).catchError((e){
+        Firestore.instance.collection('user').add(signupdata).catchError((e){
         print(e);
-        print("helooooo");
         });
-     
-     
-        // Firestore.instance.collection("doctor").add(signupdata).catchError((e){
-        // print(e);
-        // });
     }
     else{
       final snackBar = SnackBar(content: Text('Please Do Login'));

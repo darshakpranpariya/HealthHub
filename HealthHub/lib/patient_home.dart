@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:healthhub/services/appointment.dart';
+import 'package:healthhub/services/appointment_day.dart';
 import 'package:healthhub/services/crud1.dart';
 import 'package:intl/intl.dart';
 
@@ -15,8 +15,9 @@ class _Patient_HomeState extends State<Patient_Home>
   QuerySnapshot data;
   CRUD1 crudobj = new CRUD1();
   TabController controller;
-  int currentindex=0;
+  int currentindex = 0;
   final List<Widget> _children = [];
+  
   @override
   void initState() {
     controller = new TabController(length: 2, vsync: this);
@@ -24,12 +25,11 @@ class _Patient_HomeState extends State<Patient_Home>
   }
 
   Widget card(BuildContext context) {
-    int c1 = 1;
+    int c1=0;
     // setState(() {
-    String t = DateFormat("jm").format(DateTime.now());
+    int t = date.hour;
     print(t);
-    if (t == "10:00 PM" || c1 == 1) {
-      c1 = 1;
+    if (!(t>=10 && t<22)) {
       return Card(
         color: Colors.green[50],
         child: Column(
@@ -43,8 +43,6 @@ class _Patient_HomeState extends State<Patient_Home>
         ),
       );
     } else {
-      if (t == "10:00 AM" || c1 == 0) {
-        c1 = 0;
         return Card(
           color: Colors.green[50],
           child: Column(
@@ -57,17 +55,16 @@ class _Patient_HomeState extends State<Patient_Home>
             ],
           ),
         );
-      }
     }
     // });
   }
 
   void onTabTapped(int index) {
-   setState(() {
-     currentindex = index;
+    setState(() {
+      currentindex = index;
       _children[currentindex];
-   });
- }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,9 +80,7 @@ class _Patient_HomeState extends State<Patient_Home>
           Text(DateFormat('d-M-y \n   EEEE').format(date)),
         ],
       ),
-      body: 
-      
-      Column(
+      body: Column(
         children: <Widget>[
           Stack(
             children: <Widget>[
@@ -131,9 +126,8 @@ class _Patient_HomeState extends State<Patient_Home>
           ),
         ],
       ),
-      
       bottomNavigationBar: BottomNavigationBar(
-         onTap: onTabTapped, // new
+        onTap: onTabTapped, // new
         currentIndex: currentindex, // new
         items: [
           BottomNavigationBarItem(
@@ -152,44 +146,40 @@ class _Patient_HomeState extends State<Patient_Home>
   }
 
   Widget hospitaldetails() {
-    
     crudobj.getData('hospital').then((result) {
       setState(() {
         data = result;
       });
     });
-    if(data == null){
+    if (data == null) {
       return Center(
         child: CircularProgressIndicator(),
       );
-    }
-    else{
+    } else {
       return Column(
-      children: <Widget>[
-        
-        Padding(
-          padding: EdgeInsets.only(top: 5.0),
-        ),
-        Text(
-          data.documents[0].data['hos_name'],
-          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-        ),
-        Text(data.documents[0].data['hos_time'],
-            style: TextStyle(
-              fontSize: 15.0,
-            )),
-        Text(data.documents[0].data['hos_add'],
-            style: TextStyle(
-              fontSize: 15.0,
-            )),
-        Text(data.documents[0].data['hos_phone'],
-            style: TextStyle(
-              fontSize: 15.0,
-            )),
-        card(context),
-      ],
-    );
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top: 5.0),
+          ),
+          Text(
+            data.documents[0].data['hos_name'],
+            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+          ),
+          Text(data.documents[0].data['hos_time'],
+              style: TextStyle(
+                fontSize: 15.0,
+              )),
+          Text(data.documents[0].data['hos_add'],
+              style: TextStyle(
+                fontSize: 15.0,
+              )),
+          Text(data.documents[0].data['hos_phone'],
+              style: TextStyle(
+                fontSize: 15.0,
+              )),
+          card(context),
+        ],
+      );
     }
-    
   }
 }

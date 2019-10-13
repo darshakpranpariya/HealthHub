@@ -49,13 +49,6 @@ class _LoginPageState extends State<LoginPage>
           .catchError((e) {
         print(e);
       });
-    
-      // crudobj
-      //     .addData(signupdata, context, radiovalue)
-      //     .then((result) {})
-      //     .catchError((e) {
-      //   print(e);
-      // });
   }
 
   void submit() async {
@@ -68,7 +61,7 @@ class _LoginPageState extends State<LoginPage>
               .signInWithEmailAndPassword(email: _email, password: _password)
               .then((FirebaseUser user) {
             if (radiovalue == 0) {
-              cate = 'patient';
+              cate = 'user';
             } else
               cate = 'doctor';
             crudobj.getData(cate).then((result) {
@@ -272,36 +265,6 @@ class _LoginPageState extends State<LoginPage>
               value.isEmpty ? "phone number can't be empty" : null,
           onSaved: (value) => _phone = value,
         ),
-        // Padding(
-        //   padding: EdgeInsets.only(top: 15.0),
-        // ),
-        // new Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-        //   children: <Widget>[
-        //     new Radio(
-        //       activeColor: Colors.blue,
-        //       value: 0,
-        //       groupValue: radiovalue,
-        //       onChanged: (int e) => something(e),
-        //     ),
-        //     new Text(
-        //       'Patient',
-        //       style: new TextStyle(fontSize: 16.0),
-        //     ),
-        //     new Radio(
-        //       activeColor: Colors.deepPurpleAccent,
-        //       value: 1,
-        //       groupValue: radiovalue,
-        //       onChanged: (int e) => something(e),
-        //     ),
-        //     new Text(
-        //       'Doctor',
-        //       style: new TextStyle(
-        //         fontSize: 16.0,
-        //       ),
-        //     ),
-        //   ],
-        // ),
         Padding(
           padding: EdgeInsets.only(top: 15.0),
         ),
