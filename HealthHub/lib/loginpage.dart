@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:healthhub/patient_home.dart';
+import 'package:healthhub/services/appointment_day.dart';
 import 'package:healthhub/services/crud1.dart';
 import 'package:healthhub/patient_home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
+import 'package:healthhub/doctor_home.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -25,6 +28,7 @@ class _LoginPageState extends State<LoginPage>
   String _username;
   String _phone;
   QuerySnapshot data;
+  LoginPage ob;
 
   bool validateAndSave() {
     final form = formKey.currentState;
@@ -42,13 +46,13 @@ class _LoginPageState extends State<LoginPage>
       'username': _username,
       'phone': _phone
     };
-  
-      crudobj
-          .addData(signupdata, context)
-          .then((result) {})
-          .catchError((e) {
-        print(e);
-      });
+
+    crudobj
+        .addData(signupdata, "user", context)
+        .then((result) {})
+        .catchError((e) {
+      print(e);
+    });
   }
 
   void submit() async {
@@ -68,17 +72,27 @@ class _LoginPageState extends State<LoginPage>
               setState(() {
                 data = result;
                 if (data != null) {
-
-                  for(int i=0;i<data.documents.length;i++){
+                  for (int i = 0; i < data.documents.length; i++) {
                     if (_email == data.documents[i].data['email']) {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Patient_Home()));
-                    radiovalue = null;
-                    temp=false;
-                    break;
+                      if (cate == "user") {
+                        var route = new MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              new Patient_Home(email: _email),
+                        );
+                        Navigator.of(context).push(route);
+                      } else {
+                        var route = new MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              new Doctor_Home(email: _email,name: data.documents[i].data['username']),
+                        );
+                        Navigator.of(context).push(route);
+                      }
+                      radiovalue = null;
+                      temp = false;
+                      break;
+                    }
                   }
-                  }
-                   if(temp) {
+                  if (temp) {
                     var alertDialog = AlertDialog(
                       title: Text("Please select correct category"),
                       content: Text("patient or Doctor"),
@@ -90,6 +104,13 @@ class _LoginPageState extends State<LoginPage>
                 }
               });
             }).catchError((e) {
+              var alertDialog1 = AlertDialog(
+                title: Text("Error"),
+                content: Text("your email/password is wrong"),
+              );
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) => alertDialog1);
               print(e);
             });
           });
@@ -133,7 +154,6 @@ class _LoginPageState extends State<LoginPage>
         body: Container(
           padding: EdgeInsets.all(15.0),
           child: ListView(
-            
             children: <Widget>[
               Form(
                 key: formKey,
@@ -155,7 +175,9 @@ class _LoginPageState extends State<LoginPage>
           labelStyle: TextStyle(fontSize: 17.0),
         ),
         validator: (value) => value.isEmpty ? "Email can't be empty" : null,
-        onSaved: (value) => _email = value,
+        onSaved: (value) {
+          _email = value;
+        },
       ),
       TextFormField(
         style: TextStyle(fontSize: 17.0),

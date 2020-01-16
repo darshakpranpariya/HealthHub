@@ -11,10 +11,10 @@ class CRUD1{
     else
       return false;
   }
-  Future<void> addData(signupdata,BuildContext context) async{
+  Future<void> addData(data,tablename,BuildContext context) async{
     if(checksignin()){
       
-        Firestore.instance.collection('user').add(signupdata).catchError((e){
+        Firestore.instance.collection(tablename).add(data).catchError((e){
         print(e);
         });
     }
@@ -29,12 +29,12 @@ class CRUD1{
   }
   
   updateData(selectedDoc,newValue){
-    Firestore.instance.collection("testcrud").document(selectedDoc).updateData(newValue).catchError((e){
+    Firestore.instance.collection("token").document(selectedDoc).updateData(newValue).catchError((e){
       print(e);
     });
   }
   void deleteData(docId){
-    Firestore.instance.collection("testcrud").document(docId).delete().catchError((e){
+    Firestore.instance.collection("token").document(docId).delete().catchError((e){
       print(e);
     });
   }

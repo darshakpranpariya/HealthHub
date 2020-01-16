@@ -74,11 +74,18 @@ class _doctor_infoState extends State<doctor_info> {
     return Scaffold(
       body: ListView(
         children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top:15.0),
+          ),
           Center(child: Container(
             height: 40.0,
-            width: 80.0,
-            color: Colors.pink[50],
-            child: Text("Doctors",style: TextStyle(fontSize:17.0,fontWeight: FontWeight.bold,color: Colors.pink[200]),))),
+            width: 100.0,
+            decoration: BoxDecoration(
+                color: Colors.pink[50],
+                border: Border.all(color: Colors.pink),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            child: Text(" Doctors",style: TextStyle(fontSize:17.0,fontWeight: FontWeight.bold,color: Colors.pink[200]),))),
           Padding(
             padding: EdgeInsets.only(top:15.0),
           ),

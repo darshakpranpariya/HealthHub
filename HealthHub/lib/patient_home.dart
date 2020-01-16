@@ -5,12 +5,18 @@ import 'package:healthhub/services/crud1.dart';
 import 'package:intl/intl.dart';
 
 class Patient_Home extends StatefulWidget {
+
+    final String email;
+    Patient_Home({Key key, this.email}) : super(key: key);
+
   @override
   _Patient_HomeState createState() => _Patient_HomeState();
 }
 
 class _Patient_HomeState extends State<Patient_Home>
     with SingleTickerProviderStateMixin {
+
+
   DateTime date = DateTime.now();
   QuerySnapshot data;
   CRUD1 crudobj = new CRUD1();
@@ -77,7 +83,7 @@ class _Patient_HomeState extends State<Patient_Home>
           style: TextStyle(fontSize: 17.0),
         ),
         actions: <Widget>[
-          Text(DateFormat('d-M-y \n   EEEE').format(date)),
+          Text(DateFormat('d-M-y \n  EEEE').format(date)),
         ],
       ),
       body: Column(
@@ -112,7 +118,7 @@ class _Patient_HomeState extends State<Patient_Home>
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Appointment()));
+                                builder: (context) => Appointment(emaill: widget.email)));
                       },
                       child: Container(
                         width: 200.0,

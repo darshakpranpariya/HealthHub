@@ -1,51 +1,83 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:healthhub/services/appointment_day.dart';
+import 'package:intl/intl.dart';
 
 import 'crud1.dart';
 
 class Appointment_evening extends StatefulWidget {
+
+  final String emailll;
+  Appointment_evening({Key key, this.emailll}) : super(key: key);
+
   @override
-  _Appointment_eveningState createState() => _Appointment_eveningState();
+  Appointment_eveningState createState() => Appointment_eveningState(email: emailll);
 }
 
-class _Appointment_eveningState extends State<Appointment_evening> 
+class Appointment_eveningState extends State<Appointment_evening> 
 with SingleTickerProviderStateMixin{
   
-
-QuerySnapshot doctor;
+  AppointmentState ob1 = new AppointmentState();
+   String email;
+  Appointment_eveningState({Key key, this.email});
+  QuerySnapshot doctor,token_data;
   CRUD1 crudobj = new CRUD1();
-final _text = TextEditingController();
+  final _text = TextEditingController();
   final _text1 = TextEditingController();
+  final _text2 = TextEditingController();
   String patient_name,patient_phone,patient_age;
   bool _validate;
 
-Widget addDialog(BuildContext context) {
+  String getdoctor_name(String token_num){
+    int token = int.parse(token_num);
+    if(token>=1 && token<=15){
+      return doctor.documents[1].data["doctor"];
+    }
+    else if(token>=16 && token<=30){
+      return doctor.documents[3].data["doctor"];
+    }
+    else if(token>=31 && token<=45){
+      return doctor.documents[0].data["doctor"];
+    }
+    else if(token>=46 && token<=60){
+      return doctor.documents[4].data["doctor"];
+    }
+    else{
+      return doctor.documents[3].data["doctor"];
+    }
+  }
+
+Widget addDialog(BuildContext context,String token_num) {
     return Dialog(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
       ),      
       elevation: 0.0,
       backgroundColor: Colors.transparent,
-      child: dialogContent(context),
+      child: dialogContent(context,token_num),
     );
   }
 
 
-  dialogContent(BuildContext context) {
+  dialogContent(BuildContext context,String token_num) {
   return Stack(
     
     children: <Widget>[
       Center(
             child: Container(
-              color: Colors.white,
+              height: 500,
+              decoration: BoxDecoration(
+                color: Colors.brown[50],
+                border: Border.all(color: Colors.orange),
+                borderRadius: BorderRadius.circular(30),
+              ),
               child: Padding(
-                padding: const EdgeInsets.all(36.0),
+                padding: const EdgeInsets.all(20.0),
                 child: ListView(
                   children: <Widget>[
-                    SizedBox(height: 20.0),
+                    SizedBox(height: 15.0),
                     Icon(Icons.person_add,size:50.0,),
-                    SizedBox(height: 40.0),
+                    SizedBox(height: 15.0),
                     TextField(
                       controller: _text,
                       style: TextStyle(fontSize: 20.0),
@@ -63,13 +95,14 @@ Widget addDialog(BuildContext context) {
                     ),
                     SizedBox(height: 25.0),
                     TextField(
+                      keyboardType: TextInputType.number,
                       controller: _text1,
                       style: TextStyle(fontSize: 20.0),
                       obscureText: false,
                       decoration: InputDecoration(
                           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                           hintText: "Patient Phone",
-                          hintStyle: TextStyle(fontSize: 20.0,color: Colors.orange),
+                          hintStyle: TextStyle(fontSize: 18.0,color: Colors.orange),
                           border:
                               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
                           onChanged: (value){
@@ -78,13 +111,14 @@ Widget addDialog(BuildContext context) {
                     ),
                     SizedBox(height: 25.0),
                     TextField(
-                      controller: _text1,
+                      controller: _text2,
                       style: TextStyle(fontSize: 20.0),
                       obscureText: false,
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                           hintText: "Patient Age",
-                          hintStyle: TextStyle(fontSize: 20.0,color: Colors.orange),
+                          hintStyle: TextStyle(fontSize: 18.0,color: Colors.orange),
                           border:
                               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
                           onChanged: (value){
@@ -92,7 +126,7 @@ Widget addDialog(BuildContext context) {
                           },
                     ),
                     SizedBox(
-                      height: 35.0,
+                      height: 30.0,
                     ),
                       Material(
                         elevation: 5.0,
@@ -101,21 +135,41 @@ Widget addDialog(BuildContext context) {
                         child: MaterialButton(
                           padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                           onPressed: () {
-                          //   Navigator.of(context).pop();
-                          //   setState(() {
-                          //   _text.text.isEmpty || _text1.text.isEmpty ? _validate = true : _validate = false;
-                          //   });
-                          //   if(!_validate){
-                
-                          //   Map<String,dynamic> noteData = {'NoteTitle':noteTitle,'Note':note,'Date':formattedDate};
-                          //   crudobj.addData(noteData,context).then((result){
-                          //     _ackAlert(context);
-                          //   }).catchError((e){
-                          //     print(e);
-                          //   });}
-                          //   _text.clear();
-                          //   _text1.clear();
-                          //  _validate=false;
+                          Navigator.of(context).pop();
+                            setState(() {
+                            _text.text.isEmpty || _text1.text.isEmpty || _text2.text.isEmpty ? _validate = true : _validate = false;
+                            });
+                            if(!_validate){
+                              String doctor_name = getdoctor_name(token_num);
+                              print(widget.emailll);
+                            Map<String,dynamic> tokendata = {'user_email':widget.emailll,'token_num':token_num,'doctor_name':doctor_name,'patient_name':patient_name,'patient_phone':patient_phone,'patient_age':patient_age,};
+                            crudobj.addData(tokendata,"token",context).then((result){
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  // return object of type Dialog
+                                  return AlertDialog(
+                                    title: new Text("Thanks"),
+                                    content: new Text("${patient_name} your token number ${token_num} is booked...\n\nPlease refresh screen with back button..."),
+                                    actions: <Widget>[
+                                      // usually buttons at the bottom of the dialog
+                                      new FlatButton(
+                                        child: new Text("Close"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }).catchError((e){
+                              print(e);
+                            });}
+                            _text.clear();
+                            _text1.clear();
+                             _text2.clear();
+                           _validate=false;
                           },
                           child: Text("Done",
                               textAlign: TextAlign.center,
@@ -132,6 +186,35 @@ Widget addDialog(BuildContext context) {
   );
 }
 
+void alrertdialog(int i) {
+    int q = 0;
+    print("7");
+    for (int k = 0; k < token_data.documents.length; k++) {
+      if (int.parse(token_data.documents[k].data["token_num"]) == i) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: new Text("Thanks"),
+                content: new Text(
+                    "${token_data.documents[k].data["patient_name"]} your token number is ${token_data.documents[k].data["token_num"]}"),
+                actions: <Widget>[
+                  // usually buttons at the bottom of the dialog
+                  new FlatButton(
+                    child: new Text("Close"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            });
+
+        q = 1;
+      }
+      if (q == 1) break;
+    }
+  }
 
 
 Widget time_doct(int i) {
@@ -158,6 +241,16 @@ Widget time_doct(int i) {
         ],
       );
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    crudobj.getData('token').then((result) {
+      setState(() {
+        token_data = result;
+      });
+    });
   }
 
   @override
@@ -247,23 +340,127 @@ Widget time_doct(int i) {
           ),
     );
   }
-  Widget card(int i) {
-      return SizedBox(
-        height: 50.0,
-        width: 50.0,
-        child: RaisedButton(
-            child: Text(
-              (i).toString(),
-              style: TextStyle(fontSize: 12.0),
-            ),
-            onPressed: (){
-              showDialog(
-                context: context,
-                builder: (BuildContext context) => addDialog(context),
-              );
-            },
-            shape: RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(30.0))),
-      );
+  // Widget card(int i) {
+  //     return SizedBox(
+  //       height: 50.0,
+  //       width: 50.0,
+  //       child: RaisedButton(
+  //           child: Text(
+  //             (i).toString(),
+  //             style: TextStyle(fontSize: 12.0),
+  //           ),
+  //           onPressed: (){
+  //             showDialog(
+  //               context: context,
+  //               builder: (BuildContext context) => addDialog(context,(i).toString()),
+  //             );
+  //           },
+  //           shape: RoundedRectangleBorder(
+  //               borderRadius: new BorderRadius.circular(30.0))),
+  //     );
+  // }
+int c=0;
+
+void check_color(int i) {
+    for (int j = 0; j < token_data.documents.length; j++) {
+      if (int.parse(token_data.documents[j].data["token_num"]) == i) {
+        if (token_data.documents[j].data["user_email"] == email) {
+          c = 1;
+        } else {
+          c = -1;
+        }
+      }
+      if (c == 1 || c == -1) break;
+    }
   }
+
+Widget card(int i) {
+    if (token_data != null) {
+      c = 0;
+      check_color(i);
+      if (c == 1) {
+        return SizedBox(
+          height: 50.0,
+          width: 50.0,
+          child: RaisedButton(
+              color: Colors.green,
+              child: Text(
+                (i).toString(),
+                style: TextStyle(fontSize: 12.0),
+              ),
+              onPressed: () {
+                alrertdialog(i);
+              },
+              shape: RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(30.0))),
+        );
+      } else if (c == -1) {
+        return SizedBox(
+          height: 50.0,
+          width: 50.0,
+          child: RaisedButton(
+              color: Colors.pink[100],
+              child: Text(
+                (i).toString(),
+                style: TextStyle(fontSize: 12.0),
+              ),
+              onPressed: () {
+                Scaffold(
+
+                );
+                  final snackBar = SnackBar(content: Text('Sorry! Token already booked'));
+                Scaffold.of(context).showSnackBar(snackBar);
+                
+                
+              },
+              shape: RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(30.0))),
+        );
+      }else if(c==2){
+        print(c);
+        print("oooo");
+        return SizedBox(
+          height: 50.0,
+          width: 50.0,
+          child: RaisedButton(
+              color: Colors.orange,
+              child: Text(
+                (i).toString(),
+                style: TextStyle(fontSize: 12.0),
+              ),
+              onPressed: () {
+                final snackBar =
+                    SnackBar(content: Text('Sorry! Token already booked'));
+                Scaffold.of(context).showSnackBar(snackBar);
+              },
+              shape: RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(30.0))),
+        );
+      } 
+      else {
+        return SizedBox(
+          height: 50.0,
+          width: 50.0,
+          child: RaisedButton(
+              color: Colors.grey[300],
+              child: Text(
+                (i).toString(),
+                style: TextStyle(fontSize: 12.0),
+              ),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) =>
+                      addDialog(context, (i).toString()),
+                );
+              },
+              shape: RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(30.0))),
+        );
+      }
+    } else {
+      return CircularProgressIndicator();
+    }
+  }
+
 }

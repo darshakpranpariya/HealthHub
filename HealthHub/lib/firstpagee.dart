@@ -11,6 +11,7 @@ class FirstPagee extends StatefulWidget {
 
 class _FirstPageeState extends State<FirstPagee> {
 
+final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
