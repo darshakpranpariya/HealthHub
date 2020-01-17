@@ -38,4 +38,9 @@ class CRUD1{
       print(e);
     });
   }
+  void deleteData1(docId){
+    Firestore.instance.collection("messages").document(docId).delete().catchError((e){
+      print(e);
+    });
+  }
 }

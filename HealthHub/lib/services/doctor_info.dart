@@ -41,7 +41,6 @@ class _doctor_infoState extends State<doctor_info> {
   }
   
   Widget time_doctt(int i) {
-  
     if (doctor == null) {
       return Center(
         child: CircularProgressIndicator(),
@@ -100,8 +99,4 @@ class _doctor_infoState extends State<doctor_info> {
       ),
     );
   }
-
-
-
-
 }

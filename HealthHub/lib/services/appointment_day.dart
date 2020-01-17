@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:healthhub/loginpage.dart';
-import 'package:healthhub/patient_home.dart';
 import 'package:healthhub/services/appointment_evening.dart';
 import 'package:healthhub/services/crud1.dart';
 import 'package:healthhub/services/doctor_info.dart';
-import 'package:healthhub/loginpage.dart';
 
 class Appointment extends StatefulWidget {
   final String emaill;
@@ -335,7 +332,7 @@ class AppointmentState extends State<Appointment>
                                   return AlertDialog(
                                     title: new Text("Thanks"),
                                     content: new Text(
-                                        "${patient_name} your token number ${token_num} is booked...\n\nPlease refresh screen with back button..."),
+                                        "$patient_name your token number $token_num is booked...\n\nPlease refresh screen with back button..."),
                                     actions: <Widget>[
                                       // usually buttons at the bottom of the dialog
                                       new FlatButton(

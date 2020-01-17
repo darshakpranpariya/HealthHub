@@ -43,20 +43,6 @@ class _Check_All_AppointmentState extends State<Check_All_Appointment> {
                 returnpatientname(i),
               ],
             ),
-          //      Container(
-          //   child: ListView.builder(
-          //     itemCount: items.length,
-          //     itemBuilder: (context, index) {
-          //       return Dismissible(
-          //         key: ObjectKey(items[index]),
-          //         child: Container(
-          //           padding: EdgeInsets.all(20.0),
-
-          //         ),
-          //       );
-          //     },
-          //   )
-          // ),
         ],
       ),
     );

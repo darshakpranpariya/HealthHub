@@ -22,19 +22,29 @@ class _Patient_HomeState extends State<Patient_Home>
   CRUD1 crudobj = new CRUD1();
   TabController controller;
   int currentindex = 0;
-  final List<Widget> _children = [];
-  
+  QuerySnapshot messages;
+
   @override
   void initState() {
-    controller = new TabController(length: 2, vsync: this);
+    controller = new TabController(length: 1, vsync: this);
     super.initState();
+    crudobj.getData('messages').then((result) {
+      setState(() {
+        messages = result;
+      });
+    });
+    // setState(() {
+    //   if(date.hour==24){
+    //   for(int i=0;i<messages.documents.length;i++){
+    //     crudobj.deleteData1(messages.documents[i].documentID);
+    //   }
+    // }
+    // });
   }
 
   Widget card(BuildContext context) {
-    int c1=0;
-    // setState(() {
     int t = date.hour;
-    print(t);
+    //print(t);
     if (!(t>=10 && t<22)) {
       return Card(
         color: Colors.green[50],
@@ -62,13 +72,12 @@ class _Patient_HomeState extends State<Patient_Home>
           ),
         );
     }
-    // });
   }
 
   void onTabTapped(int index) {
     setState(() {
       currentindex = index;
-      _children[currentindex];
+      // _children[currentindex];
     });
   }
 
@@ -86,7 +95,29 @@ class _Patient_HomeState extends State<Patient_Home>
           Text(DateFormat('d-M-y \n  EEEE').format(date)),
         ],
       ),
-      body: Column(
+      body: decide_navigation(),
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: onTabTapped, // new
+        currentIndex: currentindex, // new
+        items: [
+          BottomNavigationBarItem(
+            icon: new Icon(Icons.home),
+            title: new Text('Home'),
+          ),
+          BottomNavigationBarItem(
+            icon: new Icon(Icons.mail),
+            title: new Text('Messages'),
+          ),
+          // BottomNavigationBarItem(
+          //     icon: Icon(Icons.person), title: Text('Profile'))
+        ],
+      ),
+    );
+  }
+
+  Widget decide_navigation(){
+    if(currentindex==0){
+      return Column(
         children: <Widget>[
           Stack(
             children: <Widget>[
@@ -131,24 +162,57 @@ class _Patient_HomeState extends State<Patient_Home>
             ],
           ),
         ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: onTabTapped, // new
-        currentIndex: currentindex, // new
-        items: [
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.home),
-            title: new Text('Home'),
-          ),
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.mail),
-            title: new Text('Messages'),
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person), title: Text('Profile'))
+      );
+    }
+    else if(currentindex==1){
+      return Scaffold(
+        body: get_all_messages(),
+      );
+    }
+    else{
+      return Scaffold(
+        body: ListView(
+          children: <Widget>[
+            
+          ],
+        ),
+      );
+    } 
+  }
+
+  Widget get_all_messages(){
+    return ListView(
+        children: <Widget>[
+          for (int i = 0; i < messages.documents.length; i++)
+            Column(
+              children: <Widget>[
+                returnpatientname(i),
+              ],
+            ),
         ],
-      ),
-    );
+      );
+  }
+
+  Widget returnpatientname(int i) {
+    if (messages != null) {
+        Padding(
+          padding: EdgeInsets.only(top: 10.0),
+        );
+        return Card(
+          color: Colors.red[50],
+          child: ListTile(
+            leading: Icon(Icons.message),
+            title: Text("${messages.documents[i].data["doctor_name"]}"),
+            subtitle: Text(
+                "${messages.documents[i].data["Date"]}\n${messages.documents[i].data["message"]}"),
+            isThreeLine: true,
+          ),
+        );
+    } else {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
   }
 
   Widget hospitaldetails() {

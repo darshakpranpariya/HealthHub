@@ -11,8 +11,6 @@ class FirstPagee extends StatefulWidget {
 
 class _FirstPageeState extends State<FirstPagee> {
 
-final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
   @override
   void initState() {
     super.initState();
@@ -39,12 +37,6 @@ final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
                 fit: BoxFit.cover,
               ),
             ),
-          // Center(
-          //   // child: Padding(
-          //   //   padding: EdgeInsets.only(top:0.0),
-          //   //   child: Text("Welcme To HealthHub",style:TextStyle(fontSize: 22.0,color: Colors.green[300],fontWeight: FontWeight.bold)),
-          //   // ),
-          // ),
         ],
       ),
     );
