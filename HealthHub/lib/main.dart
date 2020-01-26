@@ -2,6 +2,7 @@
 //import 'package:firebaselogin/loginpage.dart';
 //import 'package:firebaselogin/services/crud.dart';
 import 'package:flutter/material.dart';
+import 'package:healthhub/AI%20assistant/sytody_app.dart';
 import 'firstpagee.dart';
 // import 'loginpage.dart';
 
@@ -13,11 +14,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "Impliment Firebase",
+      title: "HealthHub",
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
       home: FirstPagee(),
+      //home: SytodyApp(),
     );
   }
 }

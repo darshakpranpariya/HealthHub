@@ -4,10 +4,10 @@ import 'package:healthhub/services/appointment_day.dart';
 import 'package:healthhub/services/crud1.dart';
 import 'package:intl/intl.dart';
 
-class Patient_Home extends StatefulWidget {
 
-    final String email;
-    Patient_Home({Key key, this.email}) : super(key: key);
+class Patient_Home extends StatefulWidget {
+  final String email;
+  Patient_Home({Key key, this.email}) : super(key: key);
 
   @override
   _Patient_HomeState createState() => _Patient_HomeState();
@@ -15,14 +15,12 @@ class Patient_Home extends StatefulWidget {
 
 class _Patient_HomeState extends State<Patient_Home>
     with SingleTickerProviderStateMixin {
-
-
   DateTime date = DateTime.now();
   QuerySnapshot data;
   CRUD1 crudobj = new CRUD1();
   TabController controller;
   int currentindex = 0;
-  QuerySnapshot messages;
+  QuerySnapshot messages, token_status;
 
   @override
   void initState() {
@@ -33,19 +31,17 @@ class _Patient_HomeState extends State<Patient_Home>
         messages = result;
       });
     });
-    // setState(() {
-    //   if(date.hour==24){
-    //   for(int i=0;i<messages.documents.length;i++){
-    //     crudobj.deleteData1(messages.documents[i].documentID);
-    //   }
-    // }
-    // });
+    crudobj.getData('manage_token_status').then((result) {
+      setState(() {
+        token_status = result;
+      });
+    });
+   
   }
 
   Widget card(BuildContext context) {
     int t = date.hour;
-    //print(t);
-    if (!(t>=10 && t<22)) {
+    if (!(t >= 10 && t < 22)) {
       return Card(
         color: Colors.green[50],
         child: Column(
@@ -59,18 +55,18 @@ class _Patient_HomeState extends State<Patient_Home>
         ),
       );
     } else {
-        return Card(
-          color: Colors.green[50],
-          child: Column(
-            children: <Widget>[
-              const ListTile(
-                leading: Icon(Icons.check_circle, size: 40),
-                title: Text("Doctors is available...\n Shift running..."),
-                //subtitle: Text('TWICE'),
-              ),
-            ],
-          ),
-        );
+      return Card(
+        color: Colors.green[50],
+        child: Column(
+          children: <Widget>[
+            const ListTile(
+              leading: Icon(Icons.check_circle, size: 40),
+              title: Text("Doctors is available...\n Shift running..."),
+              //subtitle: Text('TWICE'),
+            ),
+          ],
+        ),
+      );
     }
   }
 
@@ -115,8 +111,8 @@ class _Patient_HomeState extends State<Patient_Home>
     );
   }
 
-  Widget decide_navigation(){
-    if(currentindex==0){
+  Widget decide_navigation() {
+    if (currentindex == 0) {
       return Column(
         children: <Widget>[
           Stack(
@@ -146,10 +142,18 @@ class _Patient_HomeState extends State<Patient_Home>
                             fontSize: 15.0, fontWeight: FontWeight.bold)),
                     InkWell(
                       onTap: () {
+                        if(date.hour == 23){
+                          for (int l = 0; l < token_status.documents.length; l++) {
+                            crudobj
+                                .deleteData2(token_status.documents[l].documentID);
+                          }
+                        }
+                        
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => Appointment(emaill: widget.email)));
+                                builder: (context) =>
+                                    Appointment(emaill: widget.email)));
                       },
                       child: Container(
                         width: 200.0,
@@ -163,51 +167,53 @@ class _Patient_HomeState extends State<Patient_Home>
           ),
         ],
       );
-    }
-    else if(currentindex==1){
+    } else if (currentindex == 1) {
       return Scaffold(
         body: get_all_messages(),
       );
-    }
-    else{
+    } else {
       return Scaffold(
         body: ListView(
-          children: <Widget>[
-            
-          ],
+          children: <Widget>[],
         ),
       );
-    } 
+    }
   }
+  
 
-  Widget get_all_messages(){
+  Widget get_all_messages() {
+    if (date.hour == 23) {
+      for (int l = 0; l < messages.documents.length; l++) {
+        crudobj.deleteData1(messages.documents[l].documentID);
+      }
+    }
     return ListView(
-        children: <Widget>[
-          for (int i = 0; i < messages.documents.length; i++)
-            Column(
-              children: <Widget>[
-                returnpatientname(i),
-              ],
-            ),
-        ],
-      );
+      children: <Widget>[
+        for (int i = 0; i < messages.documents.length; i++)
+          Column(
+            children: <Widget>[
+              returnpatientname(i),
+            ],
+          ),
+      ],
+    );
   }
 
   Widget returnpatientname(int i) {
     if (messages != null) {
-        Padding(
-          padding: EdgeInsets.only(top: 10.0),
-        );
-        return Card(
-          color: Colors.red[50],
-          child: ListTile(
-            leading: Icon(Icons.message),
-            title: Text("${messages.documents[i].data["doctor_name"]}"),
-            subtitle: Text(
-                "${messages.documents[i].data["Date"]}\n${messages.documents[i].data["message"]}"),
-            isThreeLine: true,
-          ),
-        );
+      Padding(
+        padding: EdgeInsets.only(top: 10.0),
+      );
+      return Card(
+        color: Colors.red[50],
+        child: ListTile(
+          leading: Icon(Icons.message),
+          title: Text("${messages.documents[i].data["doctor_name"]}"),
+          subtitle: Text(
+              "${messages.documents[i].data["Date"]}\n${messages.documents[i].data["message"]}"),
+          isThreeLine: true,
+        ),
+      );
     } else {
       return Center(
         child: CircularProgressIndicator(),
@@ -216,11 +222,13 @@ class _Patient_HomeState extends State<Patient_Home>
   }
 
   Widget hospitaldetails() {
+    
     crudobj.getData('hospital').then((result) {
       setState(() {
         data = result;
       });
     });
+    
     if (data == null) {
       return Center(
         child: CircularProgressIndicator(),

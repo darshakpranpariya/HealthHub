@@ -43,4 +43,9 @@ class CRUD1{
       print(e);
     });
   }
+  void deleteData2(docId){
+    Firestore.instance.collection("manage_token_status").document(docId).delete().catchError((e){
+      print(e);
+    });
+  }
 }

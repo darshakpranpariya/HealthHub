@@ -20,7 +20,6 @@ class _Check_All_AppointmentState extends State<Check_All_Appointment> {
  AppointmentState ob2 = new AppointmentState();
  Appointment_eveningState ob3 = new Appointment_eveningState();
 
-
   @override
   void initState() {
     crudobj.getData('token').then((result) {
@@ -40,7 +39,7 @@ class _Check_All_AppointmentState extends State<Check_All_Appointment> {
           for (int i = 0; i < appointments.documents.length; i++)
             Column(
               children: <Widget>[
-                returnpatientname(i),
+                  returnpatientname(i),
               ],
             ),
         ],
@@ -50,7 +49,6 @@ class _Check_All_AppointmentState extends State<Check_All_Appointment> {
 
   Widget returnpatientname(int i) {
     if (appointments != null) {
-      print(appointments.documents[i].data["doctor_name"]);
       if (widget.doctorname == appointments.documents[i].data["doctor_name"]) {
         Padding(
           padding: EdgeInsets.only(top: 10.0),
@@ -96,6 +94,11 @@ class _Check_All_AppointmentState extends State<Check_All_Appointment> {
                       FlatButton(
                         child: Text('DELETE'),
                         onPressed: () {
+                          Map<String,dynamic> data = {
+                            'token_num':appointments.documents[i].data["token_num"],
+                            'token_status':'3'
+                          };
+                          crudobj.addData(data, 'manage_token_status', context);
                           crudobj
                               .deleteData(appointments.documents[i].documentID);
                           crudobj.getData('token').then((result) {

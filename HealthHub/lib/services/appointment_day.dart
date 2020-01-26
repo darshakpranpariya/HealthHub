@@ -17,7 +17,7 @@ class AppointmentState extends State<Appointment>
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   String email;
   AppointmentState({Key key, this.email});
-  QuerySnapshot doctor, token_data;
+  QuerySnapshot doctor, token_data,token_status_data;
   CRUD1 crudobj = new CRUD1();
   final _text = TextEditingController();
   final _text1 = TextEditingController();
@@ -423,6 +423,11 @@ class AppointmentState extends State<Appointment>
         token_data = result;
       });
     });
+    crudobj.getData('manage_token_status').then((result) {
+      setState(() {
+        token_status_data = result;
+      });
+    });
   }
 
   @override
@@ -667,7 +672,33 @@ class AppointmentState extends State<Appointment>
         );
       }
        else {
-        return SizedBox(
+         int temp=0;
+        for(int p=0;p<token_status_data.documents.length;p++){
+          if(i==int.parse(token_status_data.documents[p].data['token_num'])){
+            temp=1;
+            return SizedBox(
+          height: 50.0,
+          width: 50.0,
+          child: RaisedButton(
+              color: Colors.grey[600],
+              child: Text(
+                (i).toString(),
+                style: TextStyle(fontSize: 12.0),
+              ),
+              onPressed: () {
+               final snackBar =
+                    SnackBar(content: Text('token was appointed already...'));
+                Scaffold.of(context).showSnackBar(snackBar);
+              },
+              shape: RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(30.0))),
+        );
+          }
+          if(temp==1)
+            break;
+        }
+        if(temp==0){
+          return SizedBox(
           height: 50.0,
           width: 50.0,
           child: RaisedButton(
@@ -686,6 +717,7 @@ class AppointmentState extends State<Appointment>
               shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(30.0))),
         );
+        } 
       }
     } else {
       return CircularProgressIndicator();
