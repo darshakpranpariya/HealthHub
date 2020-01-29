@@ -27,6 +27,7 @@ dependencies:
   cloud_firestore:
   rflutter_alert: ^1.0.2
   intl:
+  http:
   
 
 dev_dependencies:

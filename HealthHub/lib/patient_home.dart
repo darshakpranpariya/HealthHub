@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:healthhub/services/appointment_day.dart';
 import 'package:healthhub/services/crud1.dart';
 import 'package:intl/intl.dart';
+import 'package:healthhub/ner.dart';
 
 
 class Patient_Home extends StatefulWidget {
@@ -158,6 +159,32 @@ class _Patient_HomeState extends State<Patient_Home>
                       child: Container(
                         width: 200.0,
                         height: 50.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Card(
+                color: Colors.yellow[50],
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 20.0),
+                    ),
+                    Text("  Name Entity\nRecognization",
+                        style: TextStyle(
+                            fontSize: 15.0, fontWeight: FontWeight.bold)),
+                    InkWell(
+                      onTap: () {  
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    NER()));
+                      },
+                      child: Container(
+                        width: 200.0,
+                        height: 30.0,
                       ),
                     ),
                   ],
