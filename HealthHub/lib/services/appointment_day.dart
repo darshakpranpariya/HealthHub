@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:healthhub/services/appointment_evening.dart';
 import 'package:healthhub/services/crud1.dart';
 import 'package:healthhub/services/doctor_info.dart';
@@ -22,9 +23,22 @@ class AppointmentState extends State<Appointment>
   final _text = TextEditingController();
   final _text1 = TextEditingController();
   final _text2 = TextEditingController();
-  String patient_name, patient_phone, patient_age;
+  String patient_name, patient_phone, patient_age,dn;
   bool _validate;
   bool cl;
+  final formKey = GlobalKey<FormState>();
+
+  void validateAndSave(){
+    final form = formKey.currentState;
+    if(form.validate())
+    {
+      print ('Form is valid');
+    }
+    else
+    {
+      print('form is invalid');
+    }
+  }
 
   Future<void> _ackAlert(BuildContext context) {
     return showDialog<void>(
@@ -232,138 +246,153 @@ class AppointmentState extends State<Appointment>
               ),
             child: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: ListView(
-                children: <Widget>[
-                  SizedBox(height: 15.0),
-                  Icon(
-                    Icons.person_add,
-                    size: 50.0,
-                  ),
-                  SizedBox(height: 15.0),
-                  TextField(
-                    controller: _text,
-                    style: TextStyle(fontSize: 20.0),
-                    obscureText: false,
-                    decoration: InputDecoration(
-                        // errorText: _validate ? 'Value Can\'t Be Empty' : null,
-                        contentPadding:
-                            EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
-                        hintText: "Patient Name",
-                        hintStyle:
-                            TextStyle(fontSize: 18.0, color: Colors.orange),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(32.0))),
-                    onChanged: (value) {
-                      this.patient_name = value;
-                    },
-                  ),
-                  SizedBox(height: 25.0),
-                  TextField(
-                    controller: _text1,
-                    style: TextStyle(fontSize: 20.0),
-                    obscureText: false,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                        hintText: "Patient Phone",
-                        hintStyle:
-                            TextStyle(fontSize: 18.0, color: Colors.orange),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(32.0))),
-                    onChanged: (value) {
-                      this.patient_phone = value;
-                    },
-                  ),
-                  SizedBox(height: 25.0),
-                  TextField(
-                    controller: _text2,
-                    style: TextStyle(fontSize: 20.0),
-                    obscureText: false,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                        hintText: "Patient Age",
-                        hintStyle:
-                            TextStyle(fontSize: 18.0, color: Colors.orange),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(32.0))),
-                    onChanged: (value) {
-                      this.patient_age = value;
-                    },
-                  ),
-                  SizedBox(
-                    height: 35.0,
-                  ),
-                  Material(
-                      elevation: 5.0,
-                      borderRadius: BorderRadius.circular(30.0),
-                      color: Colors.blue[200],
-                      child: MaterialButton(
-                        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          setState(() {
-                            _text.text.isEmpty ||
-                                    _text1.text.isEmpty ||
-                                    _text2.text.isEmpty
-                                ? _validate = true
-                                : _validate = false;
-                          });
-                          if (!_validate) {
-                            String doctor_name = getdoctor_name(token_num);
-                            Map<String, dynamic> tokendata = {
-                              'user_email': email,
-                              'token_num': token_num,
-                              'doctor_name': doctor_name,
-                              'patient_name': patient_name,
-                              'patient_phone': patient_phone,
-                              'patient_age': patient_age,
-                              'token_status':'0'
-                            };
-                            crudobj
-                                .addData(tokendata, "token", context)
-                                .then((result) {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  // return object of type Dialog
-                                  return AlertDialog(
-                                    title: new Text("Thanks"),
-                                    content: new Text(
-                                        "$patient_name your token number $token_num is booked...\n\nPlease refresh screen with back button..."),
-                                    actions: <Widget>[
-                                      // usually buttons at the bottom of the dialog
-                                      new FlatButton(
-                                        child: new Text("Close"),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                          setState(() {
-                                            card(int.parse(token_num), context);
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            }).catchError((e) {
-                              print(e);
+              child: Form(
+                key: formKey,
+                              child: ListView(
+                  children: <Widget>[
+                    SizedBox(height: 15.0),
+                    Icon(
+                      Icons.person_add,
+                      size: 50.0,
+                    ),
+                    SizedBox(height: 15.0),
+                    TextField(
+                      //validator: (value) => value.isEmpty ? "Email can't be empty" : null,
+                      controller: _text,
+                      style: TextStyle(fontSize: 20.0),
+                      obscureText: false,
+                      decoration: InputDecoration(
+                        
+                          // errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                          contentPadding:
+                              EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
+                          hintText: "Patient Name",
+                          hintStyle:
+                              TextStyle(fontSize: 18.0, color: Colors.orange),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(32.0))),
+                      onChanged: (value) {
+                        this.patient_name = value;
+                      },
+                      
+                    ),
+                    SizedBox(height: 25.0),
+                    TextField(
+                      controller: _text1,
+                      style: TextStyle(fontSize: 20.0),
+                      obscureText: false,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          contentPadding:
+                              EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                          hintText: "Patient Phone",
+                          hintStyle:
+                              TextStyle(fontSize: 18.0, color: Colors.orange),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(32.0))),
+                      onChanged: (value) {
+                        this.patient_phone = value;
+                      },
+                    ),
+                    SizedBox(height: 25.0),
+                    TextField(
+                      controller: _text2,
+                      style: TextStyle(fontSize: 20.0),
+                      obscureText: false,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          contentPadding:
+                              EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                          hintText: "Patient Age",
+                          hintStyle:
+                              TextStyle(fontSize: 18.0, color: Colors.orange),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(32.0))),
+                      onChanged: (value) {
+                        this.patient_age = value;
+                      },
+                    ),
+                    SizedBox(
+                      height: 35.0,
+                    ),
+                    Material(
+                        elevation: 5.0,
+                        borderRadius: BorderRadius.circular(30.0),
+                        color: Colors.blue[200],
+                        child: MaterialButton(
+                          padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            setState(() {
+                              _text.text.isEmpty ||
+                                      _text1.text.isEmpty ||
+                                      _text2.text.isEmpty
+                                  ? _validate = true
+                                  : _validate = false;
                             });
-                          }
-                          _text.clear();
-                          _text1.clear();
-                          _text2.clear();
-                          _validate = false;
-                        },
-                        child: Text(
-                          "Done",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 18.0),
-                        ),
-                      )),
-                ],
+                            if (!_validate) {
+                              String doctor_name = getdoctor_name(token_num);
+                              dn = doctor_name;
+                              Map<String, dynamic> tokendata = {
+                                'user_email': email,
+                                'token_num': token_num,
+                                'doctor_name': doctor_name,
+                                'patient_name': patient_name,
+                                'patient_phone': patient_phone,
+                                'patient_age': patient_age,
+                                'token_status':'0'
+                              };
+                              crudobj
+                                  .addData(tokendata, "token", context)
+                                  .then((result) {
+                                // showDialog(
+                                //   context: context,
+                                //   builder: (BuildContext context) {
+                                //     // return object of type Dialog
+                                //     return AlertDialog(
+                                //       title: new Text("Thanks"),
+                                //       content: new Text(
+                                //           "$patient_name your token number $token_num is booked...\n\nPlease refresh screen with back button..."),
+                                //       actions: <Widget>[
+                                //         // usually buttons at the bottom of the dialog
+                                //         new FlatButton(
+                                //           child: new Text("Close"),
+                                //           onPressed: () {
+                                //             Navigator.of(context).pop();
+                                //             setState(() {
+                                //               card(int.parse(token_num), context);
+                                //             });
+                                //           },
+                                //         ),
+                                //       ],
+                                //     );
+                                //   },
+                                // );
+                              }).catchError((e) {
+                                print(e);
+                              });
+                            }
+                            _text.clear();
+                            _text1.clear();
+                            _text2.clear();
+                            _validate = false;
+                            int t = int.parse(token_num);
+                            String time="";
+                            if(t>=1 && t<=15)
+                              time+="In between 10:00 to 11:30 in morning";
+                            else if(t>=16 && t<=30)
+                              time+="In between 11:30 to 1:00 in morning";
+                            FlutterOpenWhatsapp.sendSingleMessage("91${patient_phone}", "Thanks for booking an appointment,\n${patient_name} Your appointment for ${dn} is booked successfully!\nyour token number is ${token_num},\nyour appointment time is ${time}.");
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            "Done",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 18.0),
+                          ),
+                        )),
+                  ],
+                ),
               ),
             ),
           ),

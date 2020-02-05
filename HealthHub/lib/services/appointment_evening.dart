@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:healthhub/services/appointment_day.dart';
 
 import 'crud1.dart';
@@ -24,7 +25,7 @@ with SingleTickerProviderStateMixin{
   final _text = TextEditingController();
   final _text1 = TextEditingController();
   final _text2 = TextEditingController();
-  String patient_name,patient_phone,patient_age;
+  String patient_name,patient_phone,patient_age,dn;
   bool _validate;
 
   String getdoctor_name(String token_num){
@@ -140,28 +141,28 @@ Widget addDialog(BuildContext context,String token_num) {
                             });
                             if(!_validate){
                               String doctor_name = getdoctor_name(token_num);
-                              print(widget.emailll);
+                              dn = doctor_name;
                             Map<String,dynamic> tokendata = {'user_email':widget.emailll,'token_num':token_num,'doctor_name':doctor_name,'patient_name':patient_name,'patient_phone':patient_phone,'patient_age':patient_age,};
                             crudobj.addData(tokendata,"token",context).then((result){
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  // return object of type Dialog
-                                  return AlertDialog(
-                                    title: new Text("Thanks"),
-                                    content: new Text("${patient_name} your token number ${token_num} is booked...\n\nPlease refresh screen with back button..."),
-                                    actions: <Widget>[
-                                      // usually buttons at the bottom of the dialog
-                                      new FlatButton(
-                                        child: new Text("Close"),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
+                            // showDialog(
+                            //     context: context,
+                            //     builder: (BuildContext context) {
+                            //       // return object of type Dialog
+                            //       return AlertDialog(
+                            //         title: new Text("Thanks"),
+                            //         content: new Text("${patient_name} your token number ${token_num} is booked...\n\nPlease refresh screen with back button..."),
+                            //         actions: <Widget>[
+                            //           // usually buttons at the bottom of the dialog
+                            //           new FlatButton(
+                            //             child: new Text("Close"),
+                            //             onPressed: () {
+                            //               Navigator.of(context).pop();
+                            //             },
+                            //           ),
+                            //         ],
+                            //       );
+                            //     },
+                            //   );
                             }).catchError((e){
                               print(e);
                             });}
@@ -169,6 +170,16 @@ Widget addDialog(BuildContext context,String token_num) {
                             _text1.clear();
                              _text2.clear();
                            _validate=false;
+                           int t = int.parse(token_num);
+                          String time="";
+                          if(t>=31 && t<=45)
+                            time+="In between 05:00 to 06:30 in evening";
+                          else if(t>=46 && t<=60)
+                            time+="In between 06:30 to 8:00 in evening";
+                          else
+                            time+="In between 08:00 to 10:00 in night";
+                          FlutterOpenWhatsapp.sendSingleMessage("91${patient_phone}", "Thanks for booking an appointment,\n${patient_name} Your appointment for ${dn} is booked successfully!\nyour token number is ${token_num},\nyour appointment time is ${time}.");
+                          Navigator.of(context).pop();
                           },
                           child: Text("Done",
                               textAlign: TextAlign.center,
@@ -187,7 +198,6 @@ Widget addDialog(BuildContext context,String token_num) {
 
 void alrertdialog(int i) {
     int q = 0;
-    print("7");
     for (int k = 0; k < token_data.documents.length; k++) {
       if (int.parse(token_data.documents[k].data["token_num"]) == i) {
         showDialog(

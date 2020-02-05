@@ -28,6 +28,8 @@ dependencies:
   rflutter_alert: ^1.0.2
   intl:
   http:
+  requests:
+  flutter_open_whatsapp:
   
 
 dev_dependencies:

@@ -114,7 +114,7 @@ class _Patient_HomeState extends State<Patient_Home>
 
   Widget decide_navigation() {
     if (currentindex == 0) {
-      return Column(
+      return ListView(
         children: <Widget>[
           Stack(
             children: <Widget>[

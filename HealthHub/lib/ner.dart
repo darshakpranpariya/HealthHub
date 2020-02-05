@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:healthhub/services/api.dart';
+import 'package:requests/requests.dart';
 
 class NER extends StatefulWidget {
   @override
@@ -9,9 +12,12 @@ class NER extends StatefulWidget {
 class _NERState extends State<NER> {
 
    String url;
-
+  String final_answer="";
   var Data;
-
+  var ans = new List();
+  String str;
+  Map<String,String> jawab;
+  // var jawab = new List();
   String QueryText = 'Jargons will print here...';
 
   @override
@@ -33,7 +39,9 @@ class _NERState extends State<NER> {
                   child: TextField(
                     maxLines: null,
                     onChanged: (value) {
-                      url = 'http://10.0.2.2:5000/api?text=' + value.toString();
+                      str = value.toString();
+                      //url = 'http://10.0.2.2:5000/api?text=' + value.toString();
+                      //url = ""
                     },
                     decoration: InputDecoration(
                         hintText: 'Search Anything Here',
@@ -41,10 +49,27 @@ class _NERState extends State<NER> {
                         suffixIcon: GestureDetector(
                             onTap: () async {
                               
-                              Data = await Getdata(url);
-                              
+                              Data = await Getdata(str);
+                           
                               setState(() {
-                                QueryText = Data;
+                                
+
+                              ans =Data['denotations'];
+                              print(ans);
+                              for(int i=0;i<ans.length;i++){
+                                String s="",typee;
+                                int b,e;
+                                b = ans[i]['span']['begin'];
+		                            e = ans[i]['span']['end'];
+                                for(int j=b;j<e;j++){
+                                  s+=str[j];
+                                }
+                                typee = ans[i]['obj'];
+                                String s1=(i+1).toString()+") "+s;
+                                s1+=":"+typee;
+                                final_answer+="\n"+s1;
+                              }
+                              QueryText = final_answer;
                               });
                             },
                             child: Icon(Icons.search))),
