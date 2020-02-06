@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:healthhub/services/appointment_day.dart';
 import 'package:healthhub/services/crud1.dart';
+import 'package:healthhub/services/logout.dart';
 import 'package:intl/intl.dart';
 import 'package:healthhub/ner.dart';
-
 
 class Patient_Home extends StatefulWidget {
   final String email;
@@ -21,7 +21,8 @@ class _Patient_HomeState extends State<Patient_Home>
   CRUD1 crudobj = new CRUD1();
   TabController controller;
   int currentindex = 0;
-  QuerySnapshot messages, token_status;
+  QuerySnapshot messages, token_status, user_details;
+  String username;
 
   @override
   void initState() {
@@ -37,7 +38,11 @@ class _Patient_HomeState extends State<Patient_Home>
         token_status = result;
       });
     });
-   
+    crudobj.getData('user').then((result) {
+      setState(() {
+        user_details = result;
+      });
+    });
   }
 
   Widget card(BuildContext context) {
@@ -82,8 +87,48 @@ class _Patient_HomeState extends State<Patient_Home>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blue[50],
+      drawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+              accountName: return_user_name(),
+              accountEmail: Text(widget.email),
+              currentAccountPicture: CircleAvatar(
+                backgroundColor:
+                    Theme.of(context).platform == TargetPlatform.iOS
+                        ? Colors.blue
+                        : Colors.white,
+                child: Text(
+                  username[0].toUpperCase(),
+                  style: TextStyle(fontSize: 40.0),
+                ),
+              ),
+            ),
+            ListTile(
+              title: Text("Thank you for using this app..."),
+            ),
+            ListTile(
+              title: Text("If you have any suggestion/query about this application then you can leave mail here..."),
+            ),
+            ListTile(
+              title: Text("darshak.patidar7@gmail.com"),
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
-        leading: Icon(Icons.dehaze),
+        // leading: IconButton(
+        //   icon: Icon(Icons.dehaze),
+        //   tooltip: 'press to watch profile...',
+        //   onPressed: () {
+        //     setState(() {
+        //       var route = new MaterialPageRoute(
+        //         builder: (BuildContext context) => new LogOut(),
+        //       );
+        //       Navigator.of(context).push(route);
+        //     });
+        //   },
+        // ),
         title: Text(
           "HealthHub",
           style: TextStyle(fontSize: 17.0),
@@ -112,6 +157,17 @@ class _Patient_HomeState extends State<Patient_Home>
     );
   }
 
+  Widget return_user_name() {
+    if (user_details != null) {
+      for (int i = 0; i <= user_details.documents.length; i++) {
+        if (widget.email == user_details.documents[i].data['email']) {
+          username = user_details.documents[i].data['username'];
+          return Text(user_details.documents[i].data['username']);
+        }
+      }
+    }
+  }
+
   Widget decide_navigation() {
     if (currentindex == 0) {
       return ListView(
@@ -119,8 +175,8 @@ class _Patient_HomeState extends State<Patient_Home>
           Stack(
             children: <Widget>[
               Container(
-                width: 400.0,
-                height: 200.0,
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.35,
                 color: Colors.blueGrey[100],
               ),
               hospitaldetails(),
@@ -143,13 +199,15 @@ class _Patient_HomeState extends State<Patient_Home>
                             fontSize: 15.0, fontWeight: FontWeight.bold)),
                     InkWell(
                       onTap: () {
-                        if(date.hour == 23){
-                          for (int l = 0; l < token_status.documents.length; l++) {
-                            crudobj
-                                .deleteData2(token_status.documents[l].documentID);
+                        if (date.hour == 23) {
+                          for (int l = 0;
+                              l < token_status.documents.length;
+                              l++) {
+                            crudobj.deleteData2(
+                                token_status.documents[l].documentID);
                           }
                         }
-                        
+
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -175,12 +233,9 @@ class _Patient_HomeState extends State<Patient_Home>
                         style: TextStyle(
                             fontSize: 15.0, fontWeight: FontWeight.bold)),
                     InkWell(
-                      onTap: () {  
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    NER()));
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => NER()));
                       },
                       child: Container(
                         width: 200.0,
@@ -206,7 +261,6 @@ class _Patient_HomeState extends State<Patient_Home>
       );
     }
   }
-  
 
   Widget get_all_messages() {
     if (date.hour == 23) {
@@ -249,13 +303,12 @@ class _Patient_HomeState extends State<Patient_Home>
   }
 
   Widget hospitaldetails() {
-    
     crudobj.getData('hospital').then((result) {
       setState(() {
         data = result;
       });
     });
-    
+
     if (data == null) {
       return Center(
         child: CircularProgressIndicator(),

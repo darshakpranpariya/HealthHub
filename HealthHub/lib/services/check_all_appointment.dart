@@ -36,12 +36,22 @@ class _Check_All_AppointmentState extends State<Check_All_Appointment> {
     return Scaffold(
       body: ListView(
         children: <Widget>[
-          for (int i = 0; i < appointments.documents.length; i++)
-            Column(
-              children: <Widget>[
-                  returnpatientname(i),
-              ],
-            ),
+          if(appointments!=null)
+            for (int i = 0; i < appointments.documents.length; i++)
+              Column(
+                children: <Widget>[
+                    returnpatientname(i),
+                ],
+              ),
+            if(appointments==null)
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Center(
+                  child: Container(
+                    child:CircularProgressIndicator()
+                  ),
+                ),
+              )
         ],
       ),
     );

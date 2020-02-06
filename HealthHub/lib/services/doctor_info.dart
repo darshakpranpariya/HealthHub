@@ -88,13 +88,23 @@ class _doctor_infoState extends State<doctor_info> {
           Padding(
             padding: EdgeInsets.only(top:15.0),
           ),
-          for(int i=0;i<doctor.documents.length;i++)
-            Container(
-            height: 200.0,
-            width: 100.0,
-            color: Colors.brown[50],
-            child: alldoctinfo(i),
-            ),
+          if(doctor!=null)
+            for(int i=0;i<doctor.documents.length;i++)
+              Container(
+              height: 200.0,
+              width: 100.0,
+              color: Colors.brown[50],
+              child: alldoctinfo(i),
+              ),
+            if(doctor==null)
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Center(
+                child: Container(
+                  child:CircularProgressIndicator()
+                ),
+              ),
+            )
         ],
       ),
     );

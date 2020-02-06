@@ -32,8 +32,8 @@ class _FirstPageeState extends State<FirstPagee> {
             Center(
               child: Image.asset(
                 'asset/1.png',
-                width: queryData.size.width-80,
-                height: queryData.size.height-350,
+                width: queryData.size.width*0.75,
+                height: queryData.size.height*0.45,
                 fit: BoxFit.cover,
               ),
             ),
