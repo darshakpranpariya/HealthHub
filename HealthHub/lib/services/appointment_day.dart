@@ -49,7 +49,7 @@ class AppointmentState extends State<Appointment>
           backgroundColor: Colors.brown[50],
           title: Text('Token Details'),
           content: Container(
-            height: 300,
+            height: MediaQuery.of(context).size.height*0.50,
             decoration: BoxDecoration(
                 color: Colors.brown[50],
                 border: Border.all(color: Colors.orange),
@@ -143,7 +143,8 @@ class AppointmentState extends State<Appointment>
                   padding: EdgeInsets.only(top: 15.0),
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  
                   children: <Widget>[
                     SizedBox(
                       height: 50.0,
@@ -159,7 +160,7 @@ class AppointmentState extends State<Appointment>
                               borderRadius: new BorderRadius.circular(30.0))),
                     ),
                     Text(
-                      "Patient Booked Token",
+                      "Patient Booked \nToken",
                       style: TextStyle(
                         fontSize: 14.0,
                       ),

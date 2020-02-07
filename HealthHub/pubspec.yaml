@@ -30,6 +30,8 @@ dependencies:
   http:
   requests:
   flutter_open_whatsapp:
+  flutter_linkify:
+  url_launcher:
   
 
 dev_dependencies:

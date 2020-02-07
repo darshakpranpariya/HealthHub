@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:healthhub/services/appointment_day.dart';
 import 'package:healthhub/services/crud1.dart';
-import 'package:healthhub/services/logout.dart';
 import 'package:intl/intl.dart';
 import 'package:healthhub/ner.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class Patient_Home extends StatefulWidget {
   final String email;
@@ -22,7 +24,8 @@ class _Patient_HomeState extends State<Patient_Home>
   TabController controller;
   int currentindex = 0;
   QuerySnapshot messages, token_status, user_details;
-  String username;
+  String username="darshak";
+  
 
   @override
   void initState() {
@@ -108,27 +111,43 @@ class _Patient_HomeState extends State<Patient_Home>
               title: Text("Thank you for using this app..."),
             ),
             ListTile(
-              title: Text("If you have any suggestion/query about this application then you can leave mail here..."),
+              title: Text(
+                  "If you have any suggestion/query about this application then you can leave mail here..."),
             ),
-            ListTile(
-              title: Text("darshak.patidar7@gmail.com"),
+            SizedBox(
+              height: 15.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              //crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Linkify(
+                  onOpen: (link) async {
+                    if (await canLaunch(link.url)) {
+                      await launch(link.url);
+                    } else {
+                      throw 'Could not launch $link';
+                    }
+                  },
+                  text: "darshak.patidar7@gmail.com",
+                  style: TextStyle(color: Colors.yellow, fontSize: 20.0),
+                  linkStyle: TextStyle(color: Colors.blue),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height*0.40,
+            ),
+            RaisedButton(
+              onPressed: () {
+                Navigator.popUntil(context, ModalRoute.withName("/LoginPage"));
+              },
+              child: Text('Logout', style: TextStyle(fontSize: 20)),
             ),
           ],
         ),
       ),
       appBar: AppBar(
-        // leading: IconButton(
-        //   icon: Icon(Icons.dehaze),
-        //   tooltip: 'press to watch profile...',
-        //   onPressed: () {
-        //     setState(() {
-        //       var route = new MaterialPageRoute(
-        //         builder: (BuildContext context) => new LogOut(),
-        //       );
-        //       Navigator.of(context).push(route);
-        //     });
-        //   },
-        // ),
         title: Text(
           "HealthHub",
           style: TextStyle(fontSize: 17.0),
@@ -165,7 +184,8 @@ class _Patient_HomeState extends State<Patient_Home>
           return Text(user_details.documents[i].data['username']);
         }
       }
-    }
+    } else
+      return CircularProgressIndicator();
   }
 
   Widget decide_navigation() {
@@ -264,8 +284,10 @@ class _Patient_HomeState extends State<Patient_Home>
 
   Widget get_all_messages() {
     if (date.hour == 23) {
-      for (int l = 0; l < messages.documents.length; l++) {
-        crudobj.deleteData1(messages.documents[l].documentID);
+      if (messages != null) {
+        for (int l = 0; l < messages.documents.length; l++) {
+          crudobj.deleteData1(messages.documents[l].documentID);
+        }
       }
     }
     return ListView(
