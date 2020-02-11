@@ -43,8 +43,6 @@ class _NERState extends State<NER> {
                   maxLines: null,
                   onChanged: (value) {
                     str = value.toString();
-                    //url = 'http://10.0.2.2:5000/api?text=' + value.toString();
-                    //url = ""
                   },
                   decoration: InputDecoration(
                       hintText: 'Search Anything Here',

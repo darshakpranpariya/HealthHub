@@ -48,4 +48,9 @@ class CRUD1{
       print(e);
     });
   }
+  void deleteData3(docId){
+    Firestore.instance.collection("DAA").document(docId).delete().catchError((e){
+      print(e);
+    });
+  }
 }

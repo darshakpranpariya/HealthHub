@@ -24,9 +24,18 @@ class AppointmentState extends State<Appointment>
   final _text1 = TextEditingController();
   final _text2 = TextEditingController();
   String patient_name, patient_phone, patient_age,dn;
-  bool _validate;
+  bool _validate = false;
   bool cl;
   final formKey = GlobalKey<FormState>();
+  //bool validate = false;
+
+  @override
+  void dispose() {
+    _text.dispose();
+    _text1.dispose();
+    _text2.dispose();
+    super.dispose();
+  }
 
   void validateAndSave(){
     final form = formKey.currentState;
@@ -263,7 +272,7 @@ class AppointmentState extends State<Appointment>
                       style: TextStyle(fontSize: 20.0),
                       obscureText: false,
                       decoration: InputDecoration(
-                        
+                        errorText: _validate ? 'Value Can\'t Be Empty' : null,
                           // errorText: _validate ? 'Value Can\'t Be Empty' : null,
                           contentPadding:
                               EdgeInsets.fromLTRB(10.0, 15.0, 20.0, 15.0),
@@ -284,6 +293,7 @@ class AppointmentState extends State<Appointment>
                       obscureText: false,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
+                        errorText: _validate ? 'Value Can\'t Be Empty' : null,
                           contentPadding:
                               EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                           hintText: "Patient Phone",
@@ -302,6 +312,8 @@ class AppointmentState extends State<Appointment>
                       obscureText: false,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
+                        //errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                        
                           contentPadding:
                               EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                           hintText: "Patient Age",
@@ -330,6 +342,7 @@ class AppointmentState extends State<Appointment>
                                       _text2.text.isEmpty
                                   ? _validate = true
                                   : _validate = false;
+                              //print(_validate);
                             });
                             if (!_validate) {
                               String doctor_name = getdoctor_name(token_num);
@@ -346,29 +359,7 @@ class AppointmentState extends State<Appointment>
                               crudobj
                                   .addData(tokendata, "token", context)
                                   .then((result) {
-                                // showDialog(
-                                //   context: context,
-                                //   builder: (BuildContext context) {
-                                //     // return object of type Dialog
-                                //     return AlertDialog(
-                                //       title: new Text("Thanks"),
-                                //       content: new Text(
-                                //           "$patient_name your token number $token_num is booked...\n\nPlease refresh screen with back button..."),
-                                //       actions: <Widget>[
-                                //         // usually buttons at the bottom of the dialog
-                                //         new FlatButton(
-                                //           child: new Text("Close"),
-                                //           onPressed: () {
-                                //             Navigator.of(context).pop();
-                                //             setState(() {
-                                //               card(int.parse(token_num), context);
-                                //             });
-                                //           },
-                                //         ),
-                                //       ],
-                                //     );
-                                //   },
-                                // );
+
                               }).catchError((e) {
                                 print(e);
                               });
@@ -383,7 +374,7 @@ class AppointmentState extends State<Appointment>
                               time+="In between 10:00 to 11:30 in morning";
                             else if(t>=16 && t<=30)
                               time+="In between 11:30 to 1:00 in morning";
-                            FlutterOpenWhatsapp.sendSingleMessage("91${patient_phone}", "Thanks for booking an appointment,\n${patient_name} Your appointment for ${dn} is booked successfully!\nyour token number is ${token_num},\nyour appointment time is ${time}.");
+                           FlutterOpenWhatsapp.sendSingleMessage("91${patient_phone}", "Thanks for booking an appointment,\n${patient_name} Your appointment for ${dn} is booked successfully!\nyour token number is ${token_num},\nyour appointment time is ${time}.");
                             Navigator.of(context).pop();
                           },
                           child: Text(

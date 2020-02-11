@@ -32,6 +32,7 @@ dependencies:
   flutter_open_whatsapp:
   flutter_linkify:
   url_launcher:
+  speech_recognition: ^0.3.0+1
   
 
 dev_dependencies:

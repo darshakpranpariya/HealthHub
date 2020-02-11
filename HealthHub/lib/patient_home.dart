@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:healthhub/AI%20assistant/sytody_app.dart';
+import 'package:healthhub/assistant.dart';
 import 'package:healthhub/services/appointment_day.dart';
 import 'package:healthhub/services/crud1.dart';
 import 'package:intl/intl.dart';
@@ -140,7 +142,7 @@ class _Patient_HomeState extends State<Patient_Home>
             ),
             RaisedButton(
               onPressed: () {
-                Navigator.popUntil(context, ModalRoute.withName("/LoginPage"));
+                Navigator.popUntil(context, ModalRoute.withName("/"));
               },
               child: Text('Logout', style: TextStyle(fontSize: 20)),
             ),
@@ -256,6 +258,29 @@ class _Patient_HomeState extends State<Patient_Home>
                       onTap: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) => NER()));
+                      },
+                      child: Container(
+                        width: 200.0,
+                        height: 30.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Card(
+                color: Colors.yellow[50],
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 20.0),
+                    ),
+                    Text("Doctor AI Assistant",
+                        style: TextStyle(
+                            fontSize: 15.0, fontWeight: FontWeight.bold)),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Assistant()));
                       },
                       child: Container(
                         width: 200.0,
