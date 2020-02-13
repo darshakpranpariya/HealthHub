@@ -5,10 +5,10 @@ import 'package:healthhub/AI%20assistant/sytody_app.dart';
 import 'package:healthhub/assistant.dart';
 import 'package:healthhub/services/appointment_day.dart';
 import 'package:healthhub/services/crud1.dart';
+import 'package:healthhub/text_reco.dart';
 import 'package:intl/intl.dart';
 import 'package:healthhub/ner.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 
 class Patient_Home extends StatefulWidget {
   final String email;
@@ -26,11 +26,18 @@ class _Patient_HomeState extends State<Patient_Home>
   TabController controller;
   int currentindex = 0;
   QuerySnapshot messages, token_status, user_details;
-  String username="darshak";
-  
+  String username = "darshak";
 
   @override
   void initState() {
+    if (date.hour == 23) {
+      if (messages != null) {
+        for (int l = 0; l < messages.documents.length; l++) {
+          crudobj.deleteData1(messages.documents[l].documentID);
+        }
+      }
+    }
+
     controller = new TabController(length: 1, vsync: this);
     super.initState();
     crudobj.getData('messages').then((result) {
@@ -138,7 +145,7 @@ class _Patient_HomeState extends State<Patient_Home>
               ],
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height*0.40,
+              height: MediaQuery.of(context).size.height * 0.40,
             ),
             RaisedButton(
               onPressed: () {
@@ -221,15 +228,16 @@ class _Patient_HomeState extends State<Patient_Home>
                             fontSize: 15.0, fontWeight: FontWeight.bold)),
                     InkWell(
                       onTap: () {
-                        if (date.hour == 23) {
-                          for (int l = 0;
-                              l < token_status.documents.length;
-                              l++) {
-                            crudobj.deleteData2(
-                                token_status.documents[l].documentID);
+                        setState(() {
+                          if (date.hour == 23) {
+                            for (int l = 0;
+                                l < token_status.documents.length;
+                                l++) {
+                              crudobj.deleteData2(
+                                  token_status.documents[l].documentID);
+                            }
                           }
-                        }
-
+                        });
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -279,8 +287,33 @@ class _Patient_HomeState extends State<Patient_Home>
                             fontSize: 15.0, fontWeight: FontWeight.bold)),
                     InkWell(
                       onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Assistant()));
+                      },
+                      child: Container(
+                        width: 200.0,
+                        height: 30.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Card(
+                color: Colors.yellow[50],
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 20.0),
+                    ),
+                    Text("Health Data Recognization",
+                        style: TextStyle(
+                            fontSize: 15.0, fontWeight: FontWeight.bold)),
+                    InkWell(
+                      onTap: () {
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => Assistant()));
+                            MaterialPageRoute(builder: (context) =>NER()));
                       },
                       child: Container(
                         width: 200.0,
@@ -308,13 +341,6 @@ class _Patient_HomeState extends State<Patient_Home>
   }
 
   Widget get_all_messages() {
-    if (date.hour == 23) {
-      if (messages != null) {
-        for (int l = 0; l < messages.documents.length; l++) {
-          crudobj.deleteData1(messages.documents[l].documentID);
-        }
-      }
-    }
     return ListView(
       children: <Widget>[
         for (int i = 0; i < messages.documents.length; i++)
