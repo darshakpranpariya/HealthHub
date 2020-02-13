@@ -24,34 +24,48 @@ class _GetAISuggestionsState extends State<GetAISuggestions> {
     });
   }
 
+  Future<bool> manage_back_button(){
+    Navigator.pop(context,true);
+    Navigator.pop(context,true);
+  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
-        children: <Widget>[
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.04,
-          ),
-          Container(
-              color: Colors.pink[100],
-              child: Center(
-                  child: Text("Question: "+widget.question,
-                      style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.bold)))),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.04,
-          ),
-          Container(color:Colors.pink[100],child: Center(child: Text("Answers",style:TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)))),
-          if (messages != null)
-            for (int i = 0; i < messages.documents.length; i++)
-              get_suggestions(i),
-          if (messages == null) Column(
-            children: <Widget>[
-              Container(child: CircularProgressIndicator()),
-              
-            ],
-          )
-        ],
+    return WillPopScope(
+        onWillPop: manage_back_button,
+          child: Scaffold(
+        appBar:AppBar(
+          leading: new IconButton(
+            icon: new Icon(Icons.arrow_back),
+            onPressed: (){Navigator.pop(context,true);
+              Navigator.pop(context,true);
+            }
+          ),),
+        body: ListView(
+          children: <Widget>[
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.04,
+            ),
+            Container(
+                color: Colors.pink[100],
+                child: Center(
+                    child: Text("Question: "+widget.question,
+                        style: TextStyle(
+                            fontSize: 20.0, fontWeight: FontWeight.bold)))),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.04,
+            ),
+            Container(color:Colors.pink[100],child: Center(child: Text("Answers",style:TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)))),
+            if (messages != null)
+              for (int i = 0; i < messages.documents.length; i++)
+                get_suggestions(i),
+            if (messages == null) Column(
+              children: <Widget>[
+                Container(child: CircularProgressIndicator()),
+                
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
