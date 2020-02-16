@@ -313,7 +313,7 @@ class _Patient_HomeState extends State<Patient_Home>
                     InkWell(
                       onTap: () {
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context) =>NER()));
+                            MaterialPageRoute(builder: (context) =>Text_Reco()));
                       },
                       child: Container(
                         width: 200.0,

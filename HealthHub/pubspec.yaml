@@ -33,8 +33,9 @@ dependencies:
   flutter_linkify:
   url_launcher:
   speech_recognition: ^0.3.0+1
-  # firebase_ml_vision:
-  # image_picker:
+  firebase_ml_vision:
+  image_picker:
+  permission_handler:
   
 
 dev_dependencies:
