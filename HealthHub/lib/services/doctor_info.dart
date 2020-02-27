@@ -71,41 +71,49 @@ class _doctor_infoState extends State<doctor_info> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(top:15.0),
-          ),
-          Center(child: Container(
-            height: 40.0,
-            width: 100.0,
-            decoration: BoxDecoration(
-                color: Colors.pink[50],
-                border: Border.all(color: Colors.pink),
-                borderRadius: BorderRadius.circular(10),
-              ),
-            child: Text(" Doctors",style: TextStyle(fontSize:17.0,fontWeight: FontWeight.bold,color: Colors.pink[200]),))),
-          Padding(
-            padding: EdgeInsets.only(top:15.0),
-          ),
-          if(doctor!=null)
-            for(int i=0;i<doctor.documents.length;i++)
-              Container(
-              height: 200.0,
-              width: 100.0,
-              color: Colors.brown[50],
-              child: alldoctinfo(i),
-              ),
-            if(doctor==null)
+      body: Container(
+        decoration: BoxDecoration(
+  gradient: LinearGradient(
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
+    colors: [Colors.yellow[200], Colors.red])),
+        child: ListView(
+          children: <Widget>[
             Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Center(
-                child: Container(
-                  child:CircularProgressIndicator()
+              padding: EdgeInsets.only(top:15.0),
+            ),
+            Center(child: Container(
+              alignment: Alignment.center,
+              height: 40.0,
+              width: 100.0,
+              decoration: BoxDecoration(
+                  color: Colors.pink[50],
+                  border: Border.all(color: Colors.pink),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-              ),
-            )
-        ],
+              child: Text(" Doctors",style: TextStyle(fontSize:17.0,fontWeight: FontWeight.bold,color: Colors.pink[200]),))),
+            Padding(
+              padding: EdgeInsets.only(top:15.0),
+            ),
+            if(doctor!=null)
+              for(int i=0;i<doctor.documents.length;i++)
+                Container(
+                height: 200.0,
+                width: 100.0,
+                color: Colors.brown[50],
+                child: alldoctinfo(i),
+                ),
+              if(doctor==null)
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Center(
+                  child: Container(
+                    child:CircularProgressIndicator()
+                  ),
+                ),
+              )
+          ],
+        ),
       ),
     );
   }

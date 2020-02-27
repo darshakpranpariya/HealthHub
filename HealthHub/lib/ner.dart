@@ -18,6 +18,7 @@ class _NERState extends State<NER> {
   Map<String, String> jawab;
   // var jawab = new List();
   String QueryText = 'Jargons will print here...';
+  bool isLoading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -33,59 +34,72 @@ class _NERState extends State<NER> {
           size: 35.0,
         ),
       ),
-      body: ListView(
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: TextField(
-                  maxLines: null,
-                  onChanged: (value) {
-                    str = value.toString();
-                  },
-                  decoration: InputDecoration(
-                      hintText: 'Search Anything Here',
-                      suffixIcon: GestureDetector(
-                          onTap: () async {
-                            Data = await Getdata(str);
-                            setState(() {
-                              FocusScope.of(context).requestFocus(new FocusNode());
-                              ans = Data['denotations'];
-                              for (int i = 0; i < ans.length; i++) {
-                                String s = "", typee;
-                                int b, e;
-                                b = ans[i]['span']['begin'];
-                                e = ans[i]['span']['end'];
-                                for (int j = b; j < e; j++) {
-                                  s += str[j];
+      body: Container(
+        decoration: BoxDecoration(
+  gradient: LinearGradient(
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
+    colors: [Colors.blue[200], Colors.red[200]])),
+        child: ListView(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: TextField(
+                    maxLines: null,
+                    onChanged: (value) {
+                      str = value.toString();
+                    },
+                    decoration: InputDecoration(
+                        hintText: 'Search Anything Here',
+                        suffixIcon: isLoading?GestureDetector(
+                            onTap: () async {
+                            
+                              setState(() {
+                                isLoading=false;
+                                QueryText = 'Jargons will print here...';
+                              });
+                              Data = await Getdata(str);
+                              setState(() {
+                                QueryText="";
+                                FocusScope.of(context).requestFocus(new FocusNode());
+                                ans = Data['denotations'];
+                                for (int i = 0; i < ans.length; i++) {
+                                  String s = "", typee;
+                                  int b, e;
+                                  b = ans[i]['span']['begin'];
+                                  e = ans[i]['span']['end'];
+                                  for (int j = b; j < e; j++) {
+                                    s += str[j];
+                                  }
+                                  typee = ans[i]['obj'];
+                                  String s1 = (i + 1).toString() + ") " + s;
+                                  s1 += ":" + typee;
+                                  final_answer += "\n" + s1;
                                 }
-                                typee = ans[i]['obj'];
-                                String s1 = (i + 1).toString() + ") " + s;
-                                s1 += ":" + typee;
-                                final_answer += "\n" + s1;
-                              }
-                              QueryText = final_answer;
-                            });
-                          },
-                          child: Icon(Icons.search))),
-                ),
-              ),
-              Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      QueryText,
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
-                    ),
+                                QueryText = final_answer;
+                              });
+                            },
+                            child: Icon(Icons.search)):CircularProgressIndicator()),
                   ),
-                ],
-              ),
-            ],
-          ),
-        ],
+                ),
+                Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        QueryText,
+                        style: TextStyle(
+                            fontSize: 18.0, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

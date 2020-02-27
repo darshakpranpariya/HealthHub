@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage>
   String _phone;
   QuerySnapshot data;
   LoginPage ob;
-
+  bool isLoading=true;
   bool validateAndSave() {
     final form = formKey.currentState;
     form.save();
@@ -54,14 +54,20 @@ class _LoginPageState extends State<LoginPage>
   }
 
   void submit() async {
+    setState(() {
+      isLoading=false;
+    });
     String cate;
     bool temp = true;
+    bool v = true;
     if (validateAndSave()) {
       try {
         if (_formType == FormType.login) {
           FirebaseAuth.instance
               .signInWithEmailAndPassword(email: _email, password: _password)
               .then((FirebaseUser user) {
+                v=false;
+                print(v);
             if (radiovalue == 0) {
               cate = 'user';
             } else
@@ -83,7 +89,7 @@ class _LoginPageState extends State<LoginPage>
                           builder: (BuildContext context) =>
                               new Doctor_Home(email: _email,name: data.documents[i].data['username']),
                         );
-                        Navigator.of(context).push(route);
+                        Navigator.of(context).push(route);  
                       }
                       radiovalue = null;
                       temp = false;
@@ -102,6 +108,7 @@ class _LoginPageState extends State<LoginPage>
                 }
               });
             }).catchError((e) {
+              print("hello");
               var alertDialog1 = AlertDialog(
                 title: Text("Error"),
                 content: Text("your email/password is wrong"),
@@ -110,8 +117,33 @@ class _LoginPageState extends State<LoginPage>
                   context: context,
                   builder: (BuildContext context) => alertDialog1);
               print(e);
+            })
+            ;
+          }).catchError((e){
+            setState(() {
+              isLoading=true;
             });
+            var alertDialog1 = AlertDialog(
+                title: Text("Error"),
+                content: Text("your email/password is wrong"),
+              );
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) => alertDialog1);
+              print(e);
           });
+          // if (v==true) {
+          //   setState(() {
+          //     var alertDialog = AlertDialog(
+          //             title: Text("Error"),
+          //             content: Text("your email/password is wrong"),
+          //           );
+          //           showDialog(
+          //               context: context,
+          //               builder: (BuildContext context) => alertDialog);
+          //   });
+                    
+          //         }
         } else {
           FirebaseAuth.instance.createUserWithEmailAndPassword(
               email: _email, password: _password);
@@ -124,8 +156,15 @@ class _LoginPageState extends State<LoginPage>
           showDialog(
               context: context, builder: (BuildContext context) => alertDialog);
         }
-      } catch (e) {
+      }on PlatformException catch (e) {
         print("Error is: $e");
+        var alertDialog = AlertDialog(
+                      title: Text("Error"),
+                      content: Text("your email/password is wrong"),
+                    );
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) => alertDialog);
       }
     }
   }
@@ -234,7 +273,7 @@ class _LoginPageState extends State<LoginPage>
         Padding(
           padding: EdgeInsets.only(top: 20.0),
         ),
-        ButtonTheme(
+        isLoading ? ButtonTheme(
           height: 50.0,
           minWidth: 50.0,
           //buttonColor: Colors.orange[200],
@@ -248,7 +287,9 @@ class _LoginPageState extends State<LoginPage>
             ),
             onPressed: submit,
           ),
-        ),
+        ):Center(
+                      child: CircularProgressIndicator(),
+                    ),
         Padding(
           padding: EdgeInsets.only(top: 15.0),
         ),

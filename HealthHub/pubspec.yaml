@@ -35,6 +35,11 @@ dependencies:
   speech_recognition: ^0.3.0+1
   firebase_ml_vision:
   image_picker: 
+  getflutter:
+  rolling_nav_bar:
+  shared_preferences:
+  giffy_dialog:
+  permission_handler:
 
 dev_dependencies:
   flutter_test:
@@ -56,6 +61,12 @@ flutter:
   assets:
     - asset/1.png
     - asset/Capture.jpg
+    - asset/ap.jpg
+    - asset/aa.jpg
+    - asset/aia.jpg
+    - asset/na.png
+    - asset/oca.jpg
+    - asset/space_demo.flr
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

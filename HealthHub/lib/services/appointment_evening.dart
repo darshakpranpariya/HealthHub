@@ -142,7 +142,7 @@ Widget addDialog(BuildContext context,String token_num) {
                             if(!_validate){
                               String doctor_name = getdoctor_name(token_num);
                               dn = doctor_name;
-                            Map<String,dynamic> tokendata = {'user_email':widget.emailll,'token_num':token_num,'doctor_name':doctor_name,'patient_name':patient_name,'patient_phone':patient_phone,'patient_age':patient_age,};
+                            Map<String,dynamic> tokendata = {'user_email':widget.emailll,'token_num':token_num,'doctor_name':doctor_name,'patient_name':patient_name,'patient_phone':patient_phone,'patient_age':patient_age,'token_status':'0'};
                             crudobj.addData(tokendata,"token",context).then((result){
                             // showDialog(
                             //     context: context,
@@ -270,88 +270,95 @@ Widget time_doct(int i) {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:ListView(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(top: 20.0),
-              ),
-              time_doct(0),
-              Padding(
-                padding: EdgeInsets.only(top:15.0),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[card(31), card(32), card(33), card(34), card(35)],
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10.0),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[card(36), card(37), card(38), card(39), card(40)],
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10.0),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[card(41), card(42), card(43), card(44), card(45)],
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 30.0),
-              ),
-              time_doct(4),
-              Padding(
-                padding: EdgeInsets.only(top:15.0),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[card(46), card(47), card(48), card(49), card(50)],
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10.0),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[card(51), card(52), card(53), card(54), card(55)],
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10.0),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[card(56), card(57), card(58), card(59), card(60)],
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 30.0),
-              ),
-              time_doct(2),
-              Padding(
-                padding: EdgeInsets.only(top:15.0),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[card(61), card(62), card(63), card(64), card(65)],
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10.0),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[card(66), card(67), card(68), card(69), card(70)],
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10.0),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[card(71), card(72), card(73), card(74), card(75)],
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 30.0),
-              ),
-            ],
-          ),
+      body:Container(
+        decoration: BoxDecoration(
+  gradient: LinearGradient(
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
+    colors: [Colors.blue[200], Colors.red[200]])),
+        child: ListView(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 20.0),
+                ),
+                time_doct(0),
+                Padding(
+                  padding: EdgeInsets.only(top:15.0),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[card(31), card(32), card(33), card(34), card(35)],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10.0),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[card(36), card(37), card(38), card(39), card(40)],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10.0),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[card(41), card(42), card(43), card(44), card(45)],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 30.0),
+                ),
+                time_doct(4),
+                Padding(
+                  padding: EdgeInsets.only(top:15.0),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[card(46), card(47), card(48), card(49), card(50)],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10.0),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[card(51), card(52), card(53), card(54), card(55)],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10.0),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[card(56), card(57), card(58), card(59), card(60)],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 30.0),
+                ),
+                time_doct(2),
+                Padding(
+                  padding: EdgeInsets.only(top:15.0),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[card(61), card(62), card(63), card(64), card(65)],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10.0),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[card(66), card(67), card(68), card(69), card(70)],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10.0),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[card(71), card(72), card(73), card(74), card(75)],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 30.0),
+                ),
+              ],
+            ),
+      ),
     );
   }
   // Widget card(int i) {
@@ -379,12 +386,22 @@ void check_color(int i) {
     for (int j = 0; j < token_data.documents.length; j++) {
       if (int.parse(token_data.documents[j].data["token_num"]) == i) {
         if (token_data.documents[j].data["user_email"] == email) {
-          c = 1;
+          if(int.parse(token_data.documents[j].data["token_status"])==1){
+            c=2;
+          }
+          else{
+            c = 1;
+          }
+            
         } else {
-          c = -1;
+          c = -1;if(int.parse(token_data.documents[j].data["token_status"])==1){
+            c=2;
+          }
+          else
+            c = -1;
         }
       }
-      if (c == 1 || c == -1) break;
+      if (c == 1 || c == -1 || c==2) break;
     }
   }
 
@@ -431,8 +448,6 @@ Widget card(int i) {
                   borderRadius: new BorderRadius.circular(30.0))),
         );
       }else if(c==2){
-        print(c);
-        print("oooo");
         return SizedBox(
           height: 50.0,
           width: 50.0,

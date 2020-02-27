@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:healthhub/AI%20assistant/sytody_app.dart';
 import 'package:healthhub/assistant.dart';
 import 'package:healthhub/services/appointment_day.dart';
@@ -8,7 +11,9 @@ import 'package:healthhub/services/crud1.dart';
 import 'package:healthhub/text_reco.dart';
 import 'package:intl/intl.dart';
 import 'package:healthhub/ner.dart';
+import 'package:rolling_nav_bar/rolling_nav_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:getflutter/getflutter.dart';
 
 class Patient_Home extends StatefulWidget {
   final String email;
@@ -94,93 +99,146 @@ class _Patient_HomeState extends State<Patient_Home>
       // _children[currentindex];
     });
   }
-
+  Future<bool> manage_back_button(){
+      showDialog(
+  context: context,builder: (_) => FlareGiffyDialog(
+    flarePath: 'asset/space_demo.flr',
+    flareAnimation: 'loading',
+    title: Text('Thank you',
+           style: TextStyle(
+           fontSize: 22.0, fontWeight: FontWeight.w600),
+    ),
+    description: Text('Do you really want to exit.',
+          textAlign: TextAlign.center,
+          style: TextStyle(),
+        ),
+    onOkButtonPressed: () {exit(0);},
+  ) );
+    
+  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.blue[50],
-      drawer: Drawer(
-        child: ListView(
-          children: <Widget>[
-            UserAccountsDrawerHeader(
-              accountName: return_user_name(),
-              accountEmail: Text(widget.email),
-              currentAccountPicture: CircleAvatar(
-                backgroundColor:
-                    Theme.of(context).platform == TargetPlatform.iOS
-                        ? Colors.blue
-                        : Colors.white,
-                child: Text(
-                  username[0].toUpperCase(),
-                  style: TextStyle(fontSize: 40.0),
-                ),
-              ),
-            ),
-            ListTile(
-              title: Text("Thank you for using this app..."),
-            ),
-            ListTile(
-              title: Text(
-                  "If you have any suggestion/query about this application then you can leave mail here..."),
-            ),
-            SizedBox(
-              height: 15.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              //crossAxisAlignment: CrossAxisAlignment.center,
+    return WillPopScope(
+      onWillPop: manage_back_button,
+          child: Scaffold(
+        //backgroundColor: Colors.blue[50],
+        drawer: Drawer(
+          child: Container(
+            decoration: BoxDecoration(
+  gradient: LinearGradient(
+      begin: Alignment.topRight,
+      end: Alignment.bottomLeft,
+      colors: [Colors.green[200], Colors.lime[200]])),
+            child: ListView(
               children: <Widget>[
-                Linkify(
-                  onOpen: (link) async {
-                    if (await canLaunch(link.url)) {
-                      await launch(link.url);
-                    } else {
-                      throw 'Could not launch $link';
-                    }
+                UserAccountsDrawerHeader(
+                  accountName: return_user_name(),
+                  accountEmail: Text(widget.email),
+                  currentAccountPicture: CircleAvatar(
+                    backgroundColor:
+                        Theme.of(context).platform == TargetPlatform.iOS
+                            ? Colors.blue
+                            : Colors.white,
+                    child: Text(
+                      username[0].toUpperCase(),
+                      style: TextStyle(fontSize: 40.0),
+                    ),
+                  ),
+                ),
+                ListTile(
+                  title: Text("Thank you for using this app..."),
+                ),
+                ListTile(
+                  title: Text(
+                      "If you have any suggestion/query about this application then you can leave mail here..."),
+                ),
+                SizedBox(
+                  height: 15.0,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  //crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Linkify(
+                      onOpen: (link) async {
+                        if (await canLaunch(link.url)) {
+                          await launch(link.url);
+                        } else {
+                          throw 'Could not launch $link';
+                        }
+                      },
+                      text: "darshak.patidar7@gmail.com",
+                      style: TextStyle(color: Colors.yellow, fontSize: 20.0),
+                      linkStyle: TextStyle(color: Colors.blue),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.40,
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    Navigator.popUntil(context, ModalRoute.withName("/"));
                   },
-                  text: "darshak.patidar7@gmail.com",
-                  style: TextStyle(color: Colors.yellow, fontSize: 20.0),
-                  linkStyle: TextStyle(color: Colors.blue),
+                  child: Text('Logout', style: TextStyle(fontSize: 20)),
                 ),
               ],
             ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.40,
-            ),
-            RaisedButton(
-              onPressed: () {
-                Navigator.popUntil(context, ModalRoute.withName("/"));
-              },
-              child: Text('Logout', style: TextStyle(fontSize: 20)),
-            ),
+          ),
+        ),
+        appBar: AppBar(
+          title: Text(
+            "HealthHub",
+            style: TextStyle(fontSize: 17.0),
+          ),
+          actions: <Widget>[
+            Text(DateFormat('d-M-y \n  EEEE').format(date)),
           ],
-        ),
-      ),
-      appBar: AppBar(
-        title: Text(
-          "HealthHub",
-          style: TextStyle(fontSize: 17.0),
-        ),
-        actions: <Widget>[
-          Text(DateFormat('d-M-y \n  EEEE').format(date)),
-        ],
-      ),
-      body: decide_navigation(),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: onTabTapped, // new
-        currentIndex: currentindex, // new
-        items: [
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.home),
-            title: new Text('Home'),
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: <Color>[Colors.red[200], Colors.blue],
+              ),
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.mail),
-            title: new Text('Messages'),
-          ),
-          // BottomNavigationBarItem(
-          //     icon: Icon(Icons.person), title: Text('Profile'))
-        ],
+        ),
+        body: decide_navigation(),
+        bottomNavigationBar: Container(
+          height: 60,
+          child: 
+            
+             
+            RollingNavBar.iconData(
+              animationCurve: Curves.linear, // `linear` is recommended for `spinOutIn`
+  animationType: AnimationType.spinOutIn,
+  baseAnimationSpeed: 500,
+  iconData: <IconData>[
+      Icons.home,
+      Icons.message,
+  ],
+  indicatorColors: <Color>[
+      Colors.red,
+      Colors.blue,
+  ],
+  onTap: onTabTapped, // new
+            //currentIndex: currentindex,
+)// new
+            // items: [
+            //   BottomNavigationBarItem(
+            //     icon: new Icon(Icons.home),
+            //     title: new Text('Home'),
+            //   ),
+            //   BottomNavigationBarItem(
+            //     icon: new Icon(Icons.mail),
+            //     title: new Text('Messages'),
+            //   ),
+            //   // BottomNavigationBarItem(
+            //   //     icon: Icon(Icons.person), title: Text('Profile'))
+            // ],
+          
+        ),
       ),
     );
   }
@@ -206,124 +264,161 @@ class _Patient_HomeState extends State<Patient_Home>
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.35,
-                color: Colors.blueGrey[100],
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: <Color>[Colors.yellow[100], Colors.green[200]],
+                  ),
+                ),
               ),
               hospitaldetails(),
             ],
           ),
-          Column(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(top: 50.0),
-              ),
-              Card(
-                color: Colors.yellow[50],
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 20.0),
-                    ),
-                    Text("Book appointment",
-                        style: TextStyle(
-                            fontSize: 15.0, fontWeight: FontWeight.bold)),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          if (date.hour == 23) {
-                            for (int l = 0;
-                                l < token_status.documents.length;
-                                l++) {
-                              crudobj.deleteData2(
-                                  token_status.documents[l].documentID);
-                            }
-                          }
-                        });
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    Appointment(emaill: widget.email)));
-                      },
-                      child: Container(
-                        width: 200.0,
-                        height: 50.0,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Card(
-                color: Colors.yellow[50],
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 20.0),
-                    ),
-                    Text("  Name Entity\nRecognization",
-                        style: TextStyle(
-                            fontSize: 15.0, fontWeight: FontWeight.bold)),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => NER()));
-                      },
-                      child: Container(
-                        width: 200.0,
-                        height: 30.0,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Card(
-                color: Colors.yellow[50],
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 20.0),
-                    ),
-                    Text("Doctor AI Assistant",
-                        style: TextStyle(
-                            fontSize: 15.0, fontWeight: FontWeight.bold)),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Assistant()));
-                      },
-                      child: Container(
-                        width: 200.0,
-                        height: 30.0,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Card(
-                color: Colors.yellow[50],
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 20.0),
-                    ),
-                    Text("Health Data Recognization",
-                        style: TextStyle(
-                            fontSize: 15.0, fontWeight: FontWeight.bold)),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) =>Text_Reco()));
-                      },
-                      child: Container(
-                        width: 200.0,
-                        height: 30.0,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+          Container(
+            decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: <Color>[
+              Colors.cyan[100],
+              Colors.lime[100]
             ],
+          ),
+        ),
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 50.0),
+                ),
+                GFCard(
+                  color: Colors.orangeAccent[100],
+                  boxFit: BoxFit.cover,
+                  imageOverlay: AssetImage('asset/ap.jpg'),
+                  colorFilter: new ColorFilter.mode(
+                      Colors.black.withOpacity(0.18), BlendMode.dstATop),
+                  title: GFListTile(
+                    avatar: GFAvatar(
+                      backgroundImage: AssetImage('asset/aa.jpg'),
+                    ),
+                    title: Text('Online Appointment Booking',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.teal[900],fontSize: 14.0),),
+                    subTitle: Text('Doctor Appointment'),
+                  ),
+                  content: Text(
+                      "Please Book your appointmnet for doctor and reserve your token quickly"),
+                  buttonBar: GFButtonBar(
+                    children: <Widget>[
+                      GFButton(
+                        onPressed: () {
+                          setState(() {
+                            if (date.hour == 23) {
+                              for (int l = 0;
+                                  l < token_status.documents.length;
+                                  l++) {
+                                crudobj.deleteData2(
+                                    token_status.documents[l].documentID);
+                              }
+                            }
+                          });
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      Appointment(emaill: widget.email)));
+                        },
+                        text: 'Book Appointment',
+                      )
+                    ],
+                  ),
+                ),
+                GFCard(
+                  color: Colors.orangeAccent[100],
+                  boxFit: BoxFit.cover,
+                  imageOverlay: AssetImage('asset/na.png'),
+                  colorFilter: new ColorFilter.mode(
+                      Colors.black.withOpacity(0.18), BlendMode.dstATop),
+                  title: GFListTile(
+                    avatar: GFAvatar(
+                      backgroundImage: AssetImage('asset/na.png'),
+                    ),
+                    title: Text('Name Entity Recognization',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.teal[900],fontSize: 14.0),),
+                    subTitle: Text('Recognize all jargon''s'),
+                  ),
+                  content: Text(
+                      "You can understand meaning of all the new medical words by simply write name of that words"),
+                  buttonBar: GFButtonBar(
+                    children: <Widget>[
+                      GFButton(
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => NER()));
+                        },
+                        text: 'Find Meaning of Medical Words',
+                      )
+                    ],
+                  ),
+                ),
+                GFCard(
+                  color: Colors.orangeAccent[100],
+                  boxFit: BoxFit.cover,
+                  imageOverlay: AssetImage('asset/aia.jpg'),
+                  colorFilter: new ColorFilter.mode(
+                      Colors.black.withOpacity(0.18), BlendMode.dstATop),
+                  title: GFListTile(
+                    avatar: GFAvatar(
+                      backgroundImage: AssetImage('asset/aia.jpg'),
+                    ),
+                    title: Text('Doctor AI Assistant',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.teal[900],fontSize: 14.0),),
+                    subTitle: Text('AI Assistant'),
+                  ),
+                  content: Text(
+                      "You can get suggestions from Doctor AI assistant to cure your diseases by simply providing sysmtoms"),
+                  buttonBar: GFButtonBar(
+                    children: <Widget>[
+                      GFButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Assistant()));
+                        },
+                        text: 'Doctor AI Assistant',
+                      )
+                    ],
+                  ),
+                ),
+                GFCard(
+                  color: Colors.orangeAccent[100],
+                  boxFit: BoxFit.cover,
+                  imageOverlay: AssetImage('asset/oca.jpg'),
+                  colorFilter: new ColorFilter.mode(
+                      Colors.black.withOpacity(0.18), BlendMode.dstATop),
+                  title: GFListTile(
+                    avatar: GFAvatar(
+                      backgroundImage: AssetImage('asset/oca.jpg'),
+                    ),
+                    title: Text('Health Data Visualization',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.teal[900],fontSize: 14.0),),
+                    subTitle: Text('OCR'),
+                  ),
+                  content: Text(
+                      "You can visualize your health data from anywhere and anytime,it will also give suggestion to maintain your healh."),
+                  buttonBar: GFButtonBar(
+                    children: <Widget>[
+                      GFButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Text_Reco()));
+                        },
+                        text: 'Health Data Visualization',
+                      )
+                    ],
+                  ),
+                ),
+                
+              ],
+            ),
           ),
         ],
       );
@@ -341,15 +436,22 @@ class _Patient_HomeState extends State<Patient_Home>
   }
 
   Widget get_all_messages() {
-    return ListView(
-      children: <Widget>[
-        for (int i = 0; i < messages.documents.length; i++)
-          Column(
-            children: <Widget>[
-              returnpatientname(i),
-            ],
-          ),
-      ],
+    return Container(
+      decoration: BoxDecoration(
+  gradient: LinearGradient(
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
+    colors: [Colors.yellow[200], Colors.red[200]])),
+      child: ListView(
+        children: <Widget>[
+          for (int i = 0; i < messages.documents.length; i++)
+            Column(
+              children: <Widget>[
+                returnpatientname(i),
+              ],
+            ),
+        ],
+      ),
     );
   }
 
@@ -388,6 +490,7 @@ class _Patient_HomeState extends State<Patient_Home>
       );
     } else {
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Padding(
             padding: EdgeInsets.only(top: 5.0),

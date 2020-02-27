@@ -58,6 +58,7 @@ class AppointmentState extends State<Appointment>
           backgroundColor: Colors.brown[50],
           title: Text('Token Details'),
           content: Container(
+            alignment: Alignment.center,
             height: MediaQuery.of(context).size.height*0.50,
             decoration: BoxDecoration(
                 color: Colors.brown[50],
@@ -152,7 +153,7 @@ class AppointmentState extends State<Appointment>
                   padding: EdgeInsets.only(top: 15.0),
                 ),
                 Row(
-                  //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   
                   children: <Widget>[
                     SizedBox(
@@ -169,7 +170,7 @@ class AppointmentState extends State<Appointment>
                               borderRadius: new BorderRadius.circular(30.0))),
                     ),
                     Text(
-                      "Patient Booked \nToken",
+                      "All Patients Booked \nToken",
                       style: TextStyle(
                         fontSize: 14.0,
                       ),
@@ -519,95 +520,102 @@ class AppointmentState extends State<Appointment>
   Widget morning(BuildContext context) {
     return Scaffold(
       body: Builder(
-        builder: (context) => ListView(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 20.0),
-            ),
-            time_doct(1),
-            Padding(
-              padding: EdgeInsets.only(top: 15.0),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                card(1, context),
-                card(2, context),
-                card(3, context),
-                card(4, context),
-                card(5, context)
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 10.0),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                card(6, context),
-                card(7, context),
-                card(8, context),
-                card(9, context),
-                card(10, context)
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 10.0),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                card(11, context),
-                card(12, context),
-                card(13, context),
-                card(14, context),
-                card(15, context)
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 30.0),
-            ),
-            time_doct(3),
-            Padding(
-              padding: EdgeInsets.only(top: 15.0),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                card(16, context),
-                card(17, context),
-                card(18, context),
-                card(19, context),
-                card(20, context)
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 10.0),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                card(21, context),
-                card(22, context),
-                card(23, context),
-                card(24, context),
-                card(25, context)
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 10.0),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                card(26, context),
-                card(27, context),
-                card(28, context),
-                card(29, context),
-                card(30, context)
-              ],
-            ),
-          ],
+        builder: (context) => Container(
+          decoration: BoxDecoration(
+  gradient: LinearGradient(
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
+    colors: [Colors.blue[200], Colors.red[200]])),
+          child: ListView(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(top: 20.0),
+              ),
+              time_doct(1),
+              Padding(
+                padding: EdgeInsets.only(top: 15.0),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  card(1, context),
+                  card(2, context),
+                  card(3, context),
+                  card(4, context),
+                  card(5, context)
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 10.0),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  card(6, context),
+                  card(7, context),
+                  card(8, context),
+                  card(9, context),
+                  card(10, context)
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 10.0),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  card(11, context),
+                  card(12, context),
+                  card(13, context),
+                  card(14, context),
+                  card(15, context)
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 30.0),
+              ),
+              time_doct(3),
+              Padding(
+                padding: EdgeInsets.only(top: 15.0),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  card(16, context),
+                  card(17, context),
+                  card(18, context),
+                  card(19, context),
+                  card(20, context)
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 10.0),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  card(21, context),
+                  card(22, context),
+                  card(23, context),
+                  card(24, context),
+                  card(25, context)
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 10.0),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  card(26, context),
+                  card(27, context),
+                  card(28, context),
+                  card(29, context),
+                  card(30, context)
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
