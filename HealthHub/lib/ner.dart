@@ -55,7 +55,6 @@ class _NERState extends State<NER> {
                         hintText: 'Search Anything Here',
                         suffixIcon: isLoading?GestureDetector(
                             onTap: () async {
-                            
                               setState(() {
                                 isLoading=false;
                                 QueryText = 'Jargons will print here...';
@@ -79,9 +78,10 @@ class _NERState extends State<NER> {
                                   final_answer += "\n" + s1;
                                 }
                                 QueryText = final_answer;
+                                isLoading = true;
                               });
                             },
-                            child: Icon(Icons.search)):CircularProgressIndicator()),
+                            child: Icon(Icons.search)):CircularProgressIndicator(backgroundColor: Colors.white,)),
                   ),
                 ),
                 Column(

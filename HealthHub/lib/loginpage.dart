@@ -1,4 +1,6 @@
 //import 'package:firebaselogin/profilepage.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
@@ -27,15 +29,19 @@ class _LoginPageState extends State<LoginPage>
   String _phone;
   QuerySnapshot data;
   LoginPage ob;
-  bool isLoading=true;
+  bool isLoading = true;
   bool validateAndSave() {
     final form = formKey.currentState;
     form.save();
     if (form.validate()) {
       form.save();
       return true;
-    } else
+    } else {
+      setState(() {
+        isLoading = true;
+      });
       return false;
+    }
   }
 
   void insert(BuildContext context) {
@@ -45,29 +51,32 @@ class _LoginPageState extends State<LoginPage>
       'phone': _phone
     };
 
-    crudobj
-        .addData(signupdata, "user", context)
-        .then((result) {})
-        .catchError((e) {
+    crudobj.addData(signupdata, 'user', context).then((result) {
+      print(signupdata);
+    }).catchError((e) {
       print(e);
     });
   }
 
   void submit() async {
-    setState(() {
-      isLoading=false;
-    });
     String cate;
     bool temp = true;
     bool v = true;
-    if (validateAndSave()) {
-      try {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        print('connected');
+      }
+      if (validateAndSave()) {
         if (_formType == FormType.login) {
+          setState(() {
+            isLoading = false;
+          });
           FirebaseAuth.instance
               .signInWithEmailAndPassword(email: _email, password: _password)
               .then((FirebaseUser user) {
-                v=false;
-                print(v);
+            v = false;
+            print(v);
             if (radiovalue == 0) {
               cate = 'user';
             } else
@@ -86,10 +95,11 @@ class _LoginPageState extends State<LoginPage>
                         Navigator.of(context).push(route);
                       } else {
                         var route = new MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              new Doctor_Home(email: _email,name: data.documents[i].data['username']),
+                          builder: (BuildContext context) => new Doctor_Home(
+                              email: _email,
+                              name: data.documents[i].data['username']),
                         );
-                        Navigator.of(context).push(route);  
+                        Navigator.of(context).push(route);
                       }
                       radiovalue = null;
                       temp = false;
@@ -104,33 +114,26 @@ class _LoginPageState extends State<LoginPage>
                     showDialog(
                         context: context,
                         builder: (BuildContext context) => alertDialog);
+                    setState(() {
+                      isLoading = true;
+                    });
                   }
                 }
               });
-            }).catchError((e) {
-              print("hello");
-              var alertDialog1 = AlertDialog(
-                title: Text("Error"),
-                content: Text("your email/password is wrong"),
-              );
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) => alertDialog1);
-              print(e);
-            })
-            ;
-          }).catchError((e){
+            });
+          }).catchError((e) {
+            print("hello");
             setState(() {
-              isLoading=true;
+              isLoading = true;
             });
             var alertDialog1 = AlertDialog(
-                title: Text("Error"),
-                content: Text("your email/password is wrong"),
-              );
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) => alertDialog1);
-              print(e);
+              title: Text("Error"),
+              content: Text("your email/password is wrong"),
+            );
+            showDialog(
+                context: context,
+                builder: (BuildContext context) => alertDialog1);
+            print(e);
           });
           // if (v==true) {
           //   setState(() {
@@ -142,30 +145,38 @@ class _LoginPageState extends State<LoginPage>
           //               context: context,
           //               builder: (BuildContext context) => alertDialog);
           //   });
-                    
+
           //         }
         } else {
-          FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: _email, password: _password);
-          insert(context);
-          var alertDialog = AlertDialog(
-            title: Text("Account Created Successfully"),
-            content: Text("Please Do Login"),
-          );
+          FirebaseAuth.instance
+              .createUserWithEmailAndPassword(
+                  email: _email, password: _password)
+              .then((user) {
+            setState(() {
+              insert(context);
+            });
+            var alertDialog = AlertDialog(
+              title: Text("Account Created Successfully"),
+              content: Text("Please Do Login"),
+            );
 
-          showDialog(
-              context: context, builder: (BuildContext context) => alertDialog);
+            showDialog(
+                context: context,
+                builder: (BuildContext context) => alertDialog);
+          });
         }
-      }on PlatformException catch (e) {
-        print("Error is: $e");
-        var alertDialog = AlertDialog(
-                      title: Text("Error"),
-                      content: Text("your email/password is wrong"),
-                    );
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) => alertDialog);
       }
+    } on SocketException catch (_) {
+      setState(() {
+        isLoading = true;
+      });
+      var alertDialog = AlertDialog(
+        title: Text("Oops,there is no internet connection"),
+        content: Text("please switch on mobile data"),
+      );
+
+      showDialog(
+          context: context, builder: (BuildContext context) => alertDialog);
     }
   }
 
@@ -187,8 +198,23 @@ class _LoginPageState extends State<LoginPage>
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomPadding: false,
-        appBar: AppBar(title: Text("SignUp/SignIn")),
+        appBar: AppBar(title: Text("SignUp/SignIn"),
+        flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: <Color>[Colors.red[200], Colors.blue],
+              ),
+            ),
+          ),),
+        
         body: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [Colors.yellow[200], Colors.red[200]])),
           padding: EdgeInsets.all(15.0),
           child: ListView(
             children: <Widget>[
@@ -273,23 +299,23 @@ class _LoginPageState extends State<LoginPage>
         Padding(
           padding: EdgeInsets.only(top: 20.0),
         ),
-        isLoading ? ButtonTheme(
-          height: 50.0,
-          minWidth: 50.0,
-          //buttonColor: Colors.orange[200],
-          splashColor: Colors.red,
-          child: RaisedButton(
-            child: Text(
-              "LogIn",
-              style: TextStyle(
-                fontSize: 20.0,
-              ),
-            ),
-            onPressed: submit,
-          ),
-        ):Center(
-                      child: CircularProgressIndicator(),
+        isLoading
+            ? ButtonTheme(
+                height: 50.0,
+                minWidth: 50.0,
+                //buttonColor: Colors.orange[200],
+                splashColor: Colors.red,
+                child: RaisedButton(
+                  child: Text(
+                    "LogIn",
+                    style: TextStyle(
+                      fontSize: 20.0,
                     ),
+                  ),
+                  onPressed: submit,
+                ),
+              )
+            : Center(child: CircularProgressIndicator()),
         Padding(
           padding: EdgeInsets.only(top: 15.0),
         ),
