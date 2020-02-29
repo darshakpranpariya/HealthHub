@@ -204,7 +204,7 @@ class _LoginPageState extends State<LoginPage>
               gradient: LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
-                colors: <Color>[Colors.red[200], Colors.blue],
+                colors: <Color>[Colors.red[200], Colors.blue[300]],
               ),
             ),
           ),),
@@ -214,7 +214,7 @@ class _LoginPageState extends State<LoginPage>
               gradient: LinearGradient(
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
-                  colors: [Colors.yellow[200], Colors.red[200]])),
+                  colors: [Colors.white, Colors.red[200]])),
           padding: EdgeInsets.all(15.0),
           child: ListView(
             children: <Widget>[
@@ -358,7 +358,6 @@ class _LoginPageState extends State<LoginPage>
         ButtonTheme(
           height: 50.0,
           minWidth: 50.0,
-          //buttonColor: Colors.orange[200],
           splashColor: Colors.red,
           child: RaisedButton(
             child: Text(

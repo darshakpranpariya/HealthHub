@@ -192,14 +192,14 @@ class _Patient_HomeState extends State<Patient_Home>
             style: TextStyle(fontSize: 17.0),
           ),
           actions: <Widget>[
-            Text(DateFormat('d-M-y \n  EEEE').format(date)),
+            Text(DateFormat('d-M-y \n  EEEE').format(date),style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
           ],
           flexibleSpace: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
-                colors: <Color>[Colors.red[200], Colors.blue],
+                colors: <Color>[Colors.red[200], Colors.blue[300]],
               ),
             ),
           ),
