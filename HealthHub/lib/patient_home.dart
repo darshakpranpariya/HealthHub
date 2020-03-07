@@ -6,12 +6,14 @@ import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:healthhub/AI%20assistant/sytody_app.dart';
 import 'package:healthhub/assistant.dart';
+import 'package:healthhub/loginpage.dart';
 import 'package:healthhub/services/appointment_day.dart';
 import 'package:healthhub/services/crud1.dart';
 import 'package:healthhub/text_reco.dart';
 import 'package:intl/intl.dart';
 import 'package:healthhub/ner.dart';
 import 'package:rolling_nav_bar/rolling_nav_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:getflutter/getflutter.dart';
 
@@ -177,8 +179,13 @@ class _Patient_HomeState extends State<Patient_Home>
                   height: MediaQuery.of(context).size.height * 0.40,
                 ),
                 RaisedButton(
-                  onPressed: () {
-                    Navigator.popUntil(context, ModalRoute.withName("/"));
+                  onPressed:  () async{
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                    prefs.remove('email');
+                    prefs.remove('radiovalue');
+                    Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (BuildContext ctx) => LoginPage()));
+                    // Navigator.popUntil(context, ModalRoute.withName("/"));
                   },
                   child: Text('Logout', style: TextStyle(fontSize: 20)),
                 ),

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
+import 'package:healthhub/firstpagee.dart';
 import 'package:healthhub/patient_home.dart';
 import 'package:healthhub/services/crud1.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,6 +20,8 @@ enum FormType { login, register }
 
 class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
+
+  FirstPageeState ob1 = new FirstPageeState();
   CRUD1 crudobj = new CRUD1();
   final formKey = GlobalKey<FormState>();
   String _email;
@@ -81,6 +84,7 @@ class _LoginPageState extends State<LoginPage>
               cate = 'user';
             } else
               cate = 'doctor';
+            ob1.addStringToSF(_email,radiovalue.toString());
             crudobj.getData(cate).then((result) {
               setState(() {
                 data = result;
@@ -194,39 +198,46 @@ class _LoginPageState extends State<LoginPage>
     });
   }
 
+  Future<bool> manage_back_button(){
+    exit(0);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomPadding: false,
-        appBar: AppBar(title: Text("SignUp/SignIn"),
-        flexibleSpace: Container(
+    return WillPopScope(
+      onWillPop: manage_back_button,
+          child: Scaffold(
+          resizeToAvoidBottomPadding: false,
+          appBar: AppBar(title: Text("SignUp/SignIn"),
+          flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: <Color>[Colors.red[200], Colors.blue[300]],
+                ),
+              ),
+            ),),
+          
+          body: Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: <Color>[Colors.red[200], Colors.blue[300]],
-              ),
+                gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [Colors.white, Colors.red[200]])),
+            padding: EdgeInsets.all(15.0),
+            child: ListView(
+              children: <Widget>[
+                Form(
+                  key: formKey,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: buildInput() + buildSubmitButton()),
+                ),
+              ],
             ),
-          ),),
-        
-        body: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [Colors.white, Colors.red[200]])),
-          padding: EdgeInsets.all(15.0),
-          child: ListView(
-            children: <Widget>[
-              Form(
-                key: formKey,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: buildInput() + buildSubmitButton()),
-              ),
-            ],
-          ),
-        ));
+          )),
+    );
   }
 
   List<Widget> buildInput() {
