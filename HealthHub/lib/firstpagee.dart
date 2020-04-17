@@ -1,26 +1,39 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:healthhub/patient_home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'loginpage.dart';
+
 // import 'loginpage.dart';
 
 class FirstPagee extends StatefulWidget {
-  
   @override
   FirstPageeState createState() => FirstPageeState();
 }
 
-class FirstPageeState extends State<FirstPagee> {
+class FirstPageeState extends State<FirstPagee>
+    with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+  String spe, sprv;
 
-  String spe,sprv;
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // spe=prefs.getString('email');
-    // sprv=prefs.getString('radiovalue');
+
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 3000),
+      vsync: this,
+    );
+
     new Future.delayed(
-        const Duration(seconds: 2),
+        const Duration(seconds: 4),
         () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => LoginPage()),
@@ -50,33 +63,36 @@ class FirstPageeState extends State<FirstPagee> {
     //           context,
     //           MaterialPageRoute(builder: (context) => LoginPage()),
     //         ));
-    // } 
+    // }
+    _controller.forward();
   }
 
-  addStringToSF(String e,String rv) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString('email',e);
-  prefs.setString('radiovalue', rv);
-}
-
-
+  addStringToSF(String e, String rv) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('email', e);
+    prefs.setString('radiovalue', rv);
+  }
 
   @override
   Widget build(BuildContext context) {
-     MediaQueryData queryData = MediaQuery.of(context);
+    MediaQueryData queryData = MediaQuery.of(context);
     return Scaffold(
-      backgroundColor: Colors.green[50],
-      body:Column(
+      backgroundColor: Colors.blue[50],
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-            Center(
+          RotationTransition(
+            turns: Tween(begin: 0.0, end: 1.0).animate(_controller),
+            child: Center(
               child: Image.asset(
-                'asset/1.png',
-                width: queryData.size.width*0.75,
-                height: queryData.size.height*0.45,
+                'asset/logo.jpg',
+                width: queryData.size.width * 0.75,
+                height: queryData.size.height * 0.45,
                 fit: BoxFit.cover,
               ),
             ),
+            
+          ),
         ],
       ),
     );

@@ -29,7 +29,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blueGrey,
       ),
       home: FirstPagee(),
-      //home: SytodyApp(),
     );
   }
 }

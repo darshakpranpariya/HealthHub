@@ -67,6 +67,8 @@ flutter:
     - asset/na.png
     - asset/oca.jpg
     - asset/space_demo.flr
+    - asset/logo.png
+    - asset/logo.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

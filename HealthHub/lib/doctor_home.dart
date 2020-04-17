@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:healthhub/services/check_all_appointment.dart';
 import 'package:healthhub/services/crud1.dart';
 import 'package:intl/intl.dart';
@@ -19,108 +22,132 @@ class _Doctor_HomeState extends State<Doctor_Home> {
   final _text = TextEditingController();
   bool _validate = false;
 
+  Future<bool> manage_back_button() {
+    showDialog(
+        context: context,
+        builder: (_) => FlareGiffyDialog(
+              flarePath: 'asset/space_demo.flr',
+              flareAnimation: 'loading',
+              title: Text(
+                'Thank you',
+                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
+              ),
+              description: Text(
+                'Do you really want to exit.',
+                textAlign: TextAlign.center,
+                style: TextStyle(),
+              ),
+              onOkButtonPressed: () {
+                exit(0);
+              },
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[300],
-      appBar: AppBar(
-        leading: Icon(
-          Icons.person_outline,
-          size: 30.0,
-        ),
-        title: Text("Welcome"),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.message),
-            tooltip: 'leave any message to patient...',
-            onPressed: () {
-              setState(() {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) => addDialog(context),
-                );
-              });
-            },
+    return WillPopScope(
+      onWillPop: manage_back_button,
+      child: Scaffold(
+        backgroundColor: Colors.grey[300],
+        appBar: AppBar(
+          leading: Icon(
+            Icons.person_outline,
+            size: 30.0,
           ),
-        ],
-      ),
-      body: ListView(children: <Widget>[
-        Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 100.0),
-            ),
-            Center(
-              child: Container(
-                width: 300.0,
-                height: 300.0,
-                decoration: BoxDecoration(
-                  color: Colors.brown[50],
-                  border: Border.all(color: Colors.brown[400]),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 10.0),
-                    ),
-                    Icon(
-                      Icons.sentiment_very_satisfied,
-                      size: 50.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 50.0),
-                    ),
-                    Center(
-                      child: Text("Hello ${widget.name}",
-                          style: TextStyle(shadows: [
-                            Shadow(
-                              color: Colors.blue,
-                              blurRadius: 8.0,
-                              offset: Offset(5.0, 5.0),
-                            ),
-                            Shadow(
-                              color: Colors.green[50],
-                              blurRadius: 8.0,
-                              offset: Offset(-5.0, 5.0),
-                            ),
-                          ], fontSize: 18.0)),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 30.0),
-                    ),
-                    RaisedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Check_All_Appointment(
-                                    doctorname: widget.name)));
-                      },
-                      textColor: Colors.white,
-                      padding: const EdgeInsets.all(0.0),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: <Color>[
-                              Color(0xFF0D47A1),
-                              Color(0xFF1976D2),
-                              Color(0xFF42A5F5),
-                            ],
-                          ),
-                        ),
-                        padding: const EdgeInsets.all(8.0),
-                        child: const Text('Check All Appointment',
-                            style: TextStyle(fontSize: 15.0)),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+          title: Text("Welcome"),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.message),
+              tooltip: 'leave any message to patient...',
+              onPressed: () {
+                setState(() {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => addDialog(context),
+                  );
+                });
+              },
             ),
           ],
         ),
-      ]),
+        body: ListView(children: <Widget>[
+          Column(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(top: 100.0),
+              ),
+              Center(
+                child: Container(
+                  width: 300.0,
+                  height: 300.0,
+                  decoration: BoxDecoration(
+                    color: Colors.brown[50],
+                    border: Border.all(color: Colors.brown[400]),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(top: 10.0),
+                      ),
+                      Icon(
+                        Icons.sentiment_very_satisfied,
+                        size: 50.0,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 50.0),
+                      ),
+                      Center(
+                        child: Text("Hello ${widget.name}",
+                            style: TextStyle(shadows: [
+                              Shadow(
+                                color: Colors.blue,
+                                blurRadius: 8.0,
+                                offset: Offset(5.0, 5.0),
+                              ),
+                              Shadow(
+                                color: Colors.green[50],
+                                blurRadius: 8.0,
+                                offset: Offset(-5.0, 5.0),
+                              ),
+                            ], fontSize: 18.0)),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 30.0),
+                      ),
+                      RaisedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Check_All_Appointment(
+                                      doctorname: widget.name)));
+                        },
+                        textColor: Colors.white,
+                        padding: const EdgeInsets.all(0.0),
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: <Color>[
+                                Color(0xFF0D47A1),
+                                Color(0xFF1976D2),
+                                Color(0xFF42A5F5),
+                              ],
+                            ),
+                          ),
+                          padding: const EdgeInsets.all(8.0),
+                          child: const Text('Check All Appointment',
+                              style: TextStyle(fontSize: 15.0)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ]),
+      ),
     );
   }
 
@@ -142,10 +169,10 @@ class _Doctor_HomeState extends State<Doctor_Home> {
           child: Container(
             height: 350,
             decoration: BoxDecoration(
-                color: Colors.orange[50],
-                border: Border.all(color: Colors.orange),
-                borderRadius: BorderRadius.circular(30),
-              ),
+              color: Colors.orange[50],
+              border: Border.all(color: Colors.orange),
+              borderRadius: BorderRadius.circular(30),
+            ),
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: ListView(
@@ -200,12 +227,12 @@ class _Doctor_HomeState extends State<Doctor_Home> {
                             Map<String, dynamic> Data = {
                               'message': message,
                               'Date': formattedDate,
-                              'doctor_name':widget.name
+                              'doctor_name': widget.name
                             };
                             crudobj
                                 .addData(Data, "messages", context)
-                                .then((result) {
-                            }).catchError((e) {
+                                .then((result) {})
+                                .catchError((e) {
                               print(e);
                             });
                           }
